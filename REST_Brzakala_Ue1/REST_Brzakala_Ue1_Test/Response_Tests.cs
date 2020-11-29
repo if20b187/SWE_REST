@@ -13,24 +13,20 @@ namespace REST_BRZAKALA_TESTS
     [TestFixture]
     public class TestResponse
     {
-        Response res = new Response();
-        StringBuilder getRq = new StringBuilder();
-
-        [SetUp]
-        public void RequestGet()
-        {
-            res.AllMsg.Add(1, "Meine Nachricht");
-
-
-        }
+        
         [Test]
         public void ResponseGetTest()
         {
+            Response res = new Response();
+            StringBuilder getRq = new StringBuilder();
+
+            res.AllMsg.Add(1, "Meine Nachricht");
+
             getRq.Append(
-                "HTTP/1.1 200 OK\n" +
-                "Content-Type: text/plain\n" +
+                "HTTP/1.1 200 OK\r\n" +
+                "Content-Type: text/plain\r\n\r" +
                 "\n" +
-                "1 Meine Nachricht\n" +
+                "1 Meine Nachricht\n\r" +
                 "\n");
             string request = getRq.ToString();
             res.ResponseGet();
@@ -41,14 +37,18 @@ namespace REST_BRZAKALA_TESTS
         [Test]
         public void ResponseGetMoreTest()
         {
+            Response res = new Response();
+            StringBuilder getRq = new StringBuilder();
+
+            res.AllMsg.Add(1, "Meine Nachricht");
             res.AllMsg.Add(2, "was anderes");
 
             getRq.Append(
-                "HTTP/1.1 200 OK\n" +
-                "Content-Type: text/plain\n" +
+                "HTTP/1.1 200 OK\r\n" +
+                "Content-Type: text/plain\r\n\r" +
                 "\n" +
                 "1 Meine Nachricht\n" +
-                "2 was anderes\n" +
+                "2 was anderes\n\r" +
                 "\n");
             string request = getRq.ToString();
             res.ResponseGet();
@@ -59,15 +59,17 @@ namespace REST_BRZAKALA_TESTS
         [Test]
         public void ResponseGetIdTest()
         {
-            res.AllMsg.Clear();
+            Response res = new Response();
+            StringBuilder getRq = new StringBuilder();
+
             res.AllMsg.Add(1, "Meine Nachricht");
             res.AllMsg.Add(2, "was anderes");
             res.lastPart = "2";
             getRq.Append(
-                "HTTP/1.1 200 OK\n" +
-                "Content-Type: text/plain\n" +
+                "HTTP/1.1 200 OK\r\n" +
+                "Content-Type: text/plain\r\n\r" +
                 "\n" +
-                "was anderes\n" +
+                "was anderes\r\n" +
                 "");
             string request = getRq.ToString();
             res.ResponseGetId();
@@ -78,12 +80,14 @@ namespace REST_BRZAKALA_TESTS
         [Test]
         public void ResponsePostTest()
         {
-            res.AllMsg.Clear();
+            Response res = new Response();
+            StringBuilder getRq = new StringBuilder();
+
             res.AllMsg.Add(res.msgCounter, "Meine Nachricht");
             res.ResponsePost();
             getRq.Append(
-                "HTTP/1.1 200 OK\n" +
-                "Content-Type: text/plain\n" +
+                "HTTP/1.1 200 OK\r\n" +
+                "Content-Type: text/plain\r\n\r" +
                 "\n" +
                 "Nachricht id: 1" +
                 "");
@@ -95,13 +99,15 @@ namespace REST_BRZAKALA_TESTS
         [Test]
         public void ResponsePutTest()
         {
-            res.AllMsg.Clear();
+            Response res = new Response();
+            StringBuilder getRq = new StringBuilder();
+
             res.AllMsg.Add(res.msgCounter, "Meine Nachricht");
             res.lastPart = "1";
             res.ResponsePut();
             getRq.Append(
-                "HTTP/1.1 200 OK\n" +
-                "Content-Type: text/plain\n" +
+                "HTTP/1.1 200 OK\r\n" +
+                "Content-Type: text/plain\r\n\r" +
                 "\n" +
                 "Nachricht id: 1 is updated." +
                 "");
@@ -113,14 +119,16 @@ namespace REST_BRZAKALA_TESTS
         [Test]
         public void ResponseDeleteIdTest()
         {
-            res.AllMsg.Clear();
+            Response res = new Response();
+            StringBuilder getRq = new StringBuilder();
+
             res.AllMsg.Add(1, "Meine Nachricht");
             res.AllMsg.Add(2, "was anderes");
             res.lastPart = "2";
             res.ResponseDeleteId();
             getRq.Append(
-                "HTTP/1.1 200 OK\n" +
-                "Content-Type: text/plain\n" +
+                "HTTP/1.1 200 OK\r\n" +
+                "Content-Type: text/plain\r\n\r" +
                 "\n" +
                 "Nachricht id: 2 is deleted." +
                 "");
@@ -132,13 +140,16 @@ namespace REST_BRZAKALA_TESTS
         [Test]
         public void ResponseFailedTest()
         {
+            Response res = new Response();
+            StringBuilder getRq = new StringBuilder();
+
             res.ResponseFailed();
             getRq.Append(
                 "HTTP/1.1 404 Not Found\n" +
-                "Content-Type: text/plain\n" +
+                "Content-Type: text/plain\r\n\r" +
                 "\n" +
-                "Fehler\n" +
-                "\n");
+                "Fehler\r\n" +
+                "\r\n");
             string request = getRq.ToString();
 
             Assert.AreEqual(request, res.responseMsg);
