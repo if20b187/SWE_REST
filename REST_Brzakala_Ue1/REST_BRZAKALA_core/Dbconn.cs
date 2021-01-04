@@ -39,6 +39,22 @@ namespace REST_BRZAKALA_core
             cmd.ExecuteNonQuery();
             con.Close();
         }
+        public void AddUserCard(string username, int id, string name, int damage, string element, string type)
+        {
+            using var con = new NpgsqlConnection(cs);
+            con.Open();
+
+            using var cmd = new NpgsqlCommand("INSERT INTO usercards VALUES (@username ,@id, @name, @damage, @element, @type)", con);
+
+            cmd.Parameters.AddWithValue("username", username);
+            cmd.Parameters.AddWithValue("id", id);
+            cmd.Parameters.AddWithValue("name", name);
+            cmd.Parameters.AddWithValue("damage", damage);
+            cmd.Parameters.AddWithValue("element", element);
+            cmd.Parameters.AddWithValue("type", type);
+            cmd.ExecuteNonQuery();
+            con.Close();
+        }
         public void Packages(int id, int card1, int card2, int card3, int card4, int card5)
         {
             using var con = new NpgsqlConnection(cs);
@@ -68,7 +84,17 @@ namespace REST_BRZAKALA_core
             cmd.ExecuteNonQuery();
             con.Close();
         }
-        
+        public void CoinsUpdate(string user)
+        {
+            using var con = new NpgsqlConnection(cs);
+            con.Open();
+
+            using var cmd = new NpgsqlCommand("UPDATE users SET coins = coins - 5 WHERE username=@username", con);
+
+            cmd.Parameters.AddWithValue("username", user);
+            cmd.ExecuteNonQuery();
+            con.Close();
+        }
         public Boolean CheckUserExists(string user)
         {
             using var con = new NpgsqlConnection(cs);
@@ -101,7 +127,7 @@ namespace REST_BRZAKALA_core
             Console.WriteLine("   user:{0}", obj);
             */
         }
-        public int cardMaxId()
+        public int CardMaxId()
         {
             using var con = new NpgsqlConnection(cs);
             con.Open();
@@ -115,7 +141,7 @@ namespace REST_BRZAKALA_core
             {
                 if (rdr.HasRows)
                 {
-                    Console.WriteLine("Has rows");
+                    //Console.WriteLine("Has rows");
                     output = 0;
                 }
                 else
@@ -137,7 +163,7 @@ namespace REST_BRZAKALA_core
 
             return output;
         }
-        public int packidis()
+        public int Packidis()
         {
             using var con = new NpgsqlConnection(cs);
             con.Open();
@@ -151,7 +177,7 @@ namespace REST_BRZAKALA_core
             {
                 if (rdr.HasRows)
                 {
-                    Console.WriteLine("Has rows");
+                    //Console.WriteLine("Has rows");
                     output = 0;
                 }
                 else
@@ -174,7 +200,7 @@ namespace REST_BRZAKALA_core
 
             return output;
         }
-        public void checkAllCard()
+        public void CheckAllCard()
         {
             using var con = new NpgsqlConnection(cs);
             con.Open();
@@ -183,7 +209,7 @@ namespace REST_BRZAKALA_core
             using NpgsqlDataReader rdr = cmd.ExecuteReader();
 
             
-            int maxid = cardMaxId();
+            int maxid = CardMaxId();
 
             while (rdr.Read())
             {
@@ -260,6 +286,41 @@ namespace REST_BRZAKALA_core
 
             return output;
         }
+        public string TokenToUser(string token)
+        {
+            // Example:
+            // Basic testuser-mtcgToken
+            string userToken = CheckToken(token);
+            // testuser-mtcgToken
+            string username = userToken.Split(' ')[1];
+            // testuser
+            username = string.Concat(username.Reverse().Skip(10).Reverse());
+
+            return username;
+        }
+        public int CheckUserCoins(string user)
+        {
+            using var con = new NpgsqlConnection(cs);
+            con.Open();
+
+            using var cmd = new NpgsqlCommand("SELECT coins FROM users where username=@user", con);
+            cmd.Parameters.AddWithValue("user", user);
+            using NpgsqlDataReader rdr = cmd.ExecuteReader();
+
+            int output = 0;
+
+            while (rdr.Read())
+            {
+                //Console.WriteLine("{0}", rdr.GetString(0));
+                output = rdr.GetInt32(0);
+            }
+            con.Close();
+
+            // CHECK IF TOKEN IS CORRECT
+            //Console.WriteLine("Token is: {0}", output);
+
+            return output;
+        }
         public string CheckCardId(int id)
         {
             using var con = new NpgsqlConnection(cs);
@@ -281,6 +342,50 @@ namespace REST_BRZAKALA_core
             //Console.WriteLine("CardId is: {0}", output);
 
             return output.ToString();
+        }
+        public string FullCardInfo(int id)
+        {
+            using var con = new NpgsqlConnection(cs);
+            con.Open();
+
+            using var cmd = new NpgsqlCommand("SELECT * FROM card where id=@id", con);
+            cmd.Parameters.AddWithValue("id", id);
+            using NpgsqlDataReader rdr = cmd.ExecuteReader();
+
+            string output = "";
+
+            while (rdr.Read())
+            {
+                //Console.WriteLine("{0}", rdr.GetString(0));
+                output = rdr.GetInt32(0).ToString() + " " + rdr.GetString(1) + " " + rdr.GetInt32(2).ToString() + " " + rdr.GetString(3) + " " + rdr.GetString(4);
+            }
+            con.Close();
+
+            //Console.WriteLine("CardId is: {0}", output);
+
+            return output;
+        }
+        public string CheckCardsFromPack(int id)
+        {
+            using var con = new NpgsqlConnection(cs);
+            con.Open();
+
+            using var cmd = new NpgsqlCommand("SELECT card1,card2,card3,card4,card5 FROM packages where packid=@id", con);
+            cmd.Parameters.AddWithValue("id", id);
+            using NpgsqlDataReader rdr = cmd.ExecuteReader();
+
+            string output = "";
+
+            while (rdr.Read())
+            {
+                //Console.WriteLine("{0}", rdr.GetString(0));
+                output = rdr.GetInt32(0).ToString() + " " + rdr.GetInt32(1).ToString() + " " + rdr.GetInt32(2).ToString() + " " + rdr.GetInt32(3).ToString() + " " + rdr.GetInt32(4).ToString() + " ";
+            }
+            con.Close();
+
+            //Console.WriteLine("CardId is: {0}", output);
+
+            return output;
         }
         public string CheckPackId(int id)
         {

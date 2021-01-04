@@ -23,8 +23,8 @@ namespace REST_BRZAKALA_core
 
         public override string ToString()
         {
-            return "ID: " + id + " Card: " + name + " Damage: " + damage + " Element: " + element + " Type: " + type + "\n";
-            //return "" + id + " ";
+            //return "ID: " + id + " Card: " + name + " Damage: " + damage + " Element: " + element + " Type: " + type + "\n";
+            return "" + id + " ";
         }
 
 
