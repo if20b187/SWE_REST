@@ -6,7 +6,7 @@ using System.Net.Sockets;
 using System.Collections.Generic;
 using System.Linq;
 using NUnit.Framework;
-using REST_BRZAKALA_UE1;
+using REST_BRZAKALA_core;
 
 namespace REST_BRZAKALA_TESTS
 {

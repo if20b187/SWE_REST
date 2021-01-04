@@ -2,6 +2,9 @@
 using System.IO;
 using System.Collections.Generic;
 using System.Linq;
+using System.Text.Json;
+using System.Text.Json.Serialization;
+using Newtonsoft.Json;
 
 namespace REST_BRZAKALA_UE1
 {
@@ -18,6 +21,7 @@ namespace REST_BRZAKALA_UE1
 			//read line by line
 			using (StringReader reader = new StringReader(request))
 			{
+				User acc = new User();
 				string line;        //line
 				int l = 0;          //lines, starting from 0
 				while ((line = reader.ReadLine()) != null)
@@ -58,6 +62,13 @@ namespace REST_BRZAKALA_UE1
 				else
 				{
 					ContentStr = "";
+				}
+
+				if (String.Compare(Url, "/users") == 0)
+                {
+					acc = JsonConvert.DeserializeObject<User>(ContentStr);
+					Console.WriteLine(acc.Username);
+					Console.WriteLine(acc.Password);
 				}
 			}
 

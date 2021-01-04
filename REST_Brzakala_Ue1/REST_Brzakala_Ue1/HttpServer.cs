@@ -14,6 +14,7 @@ namespace REST_BRZAKALA_UE1
 		static Encoding enc = Encoding.UTF8;
 		RequestSplit rs = new RequestSplit();
 		Response res = new Response();
+		User acc = new User();
 
 
 		public void StartServer()
@@ -60,6 +61,15 @@ namespace REST_BRZAKALA_UE1
 				Console.WriteLine("");
 				res.lastPart = rs.Url.Split('/').Last();
 
+				//REGISTRATION PART - ROUTE: /users 
+				// Noch ein if das abfragt ob der User vorhanden ist!!
+				if (String.Compare(rs.Method, "POST") == 0 && String.Compare(rs.Url, "/users") == 0)
+				{
+					res.ResponseReg();
+
+					stream.Write(res.sendBytes, 0, res.sendBytes.Length);
+					rs.RequestBody.Clear();
+				}
 
 				// GET ALL
 				if (String.Compare(rs.Method, "GET") == 0 && String.Compare(rs.Url, "/message") == 0)

@@ -141,6 +141,22 @@ namespace REST_BRZAKALA_UE1
 			responseMsg = builder.ToString();
 			sendBytes = enc.GetBytes(builder.ToString());
 		}
+		public void ResponseReg()
+		{
+			StringBuilder builder = new StringBuilder();
+			builder.AppendLine("HTTP/1.1 200 OK");
+			builder.AppendLine("Content-Type: application/json");
+			builder.AppendLine("");
+			builder.AppendFormat("Registration Succesfull");
+
+			Console.WriteLine("");
+			Console.WriteLine("responce:");
+			Console.WriteLine(builder.ToString());
+			responseMsg = builder.ToString();
+
+			sendBytes = enc.GetBytes(builder.ToString());
+
+		}
 
 
 		public Dictionary<int, string> AllMsg { get; set; }
