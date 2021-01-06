@@ -3,13 +3,9 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Version 16
 VisualStudioVersion = 16.0.808.0
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "REST_Brzakala_Ue1", "REST_Brzakala_Ue1\REST_Brzakala_Ue1.csproj", "{6E4AC846-24CE-4967-B4DD-996B2B3C51F0}"
-EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "REST_Brzakala_Ue1_Test", "REST_Brzakala_Ue1_Test\REST_Brzakala_Ue1_Test.csproj", "{8EA15C1B-0BA9-4DA5-A396-34D6EE093A39}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "MTCG", "MTCG\MTCG.csproj", "{E3776285-BA45-45A7-9FB7-675431489C29}"
-EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "REST_BRZAKALA_core", "REST_BRZAKALA_core\REST_BRZAKALA_core.csproj", "{2C98184A-67E7-4F7A-A606-6A4A8CEB9809}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "REST_BRZAKALA_core", "REST_BRZAKALA_core\REST_BRZAKALA_core.csproj", "{2C98184A-67E7-4F7A-A606-6A4A8CEB9809}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -17,18 +13,10 @@ Global
 		Release|anycpu = Release|anycpu
 	EndGlobalSection
 	GlobalSection(ProjectConfigurationPlatforms) = postSolution
-		{6E4AC846-24CE-4967-B4DD-996B2B3C51F0}.Debug|anycpu.ActiveCfg = Debug|Any CPU
-		{6E4AC846-24CE-4967-B4DD-996B2B3C51F0}.Debug|anycpu.Build.0 = Debug|Any CPU
-		{6E4AC846-24CE-4967-B4DD-996B2B3C51F0}.Release|anycpu.ActiveCfg = Release|anycpu
-		{6E4AC846-24CE-4967-B4DD-996B2B3C51F0}.Release|anycpu.Build.0 = Release|anycpu
 		{8EA15C1B-0BA9-4DA5-A396-34D6EE093A39}.Debug|anycpu.ActiveCfg = Debug|Any CPU
 		{8EA15C1B-0BA9-4DA5-A396-34D6EE093A39}.Debug|anycpu.Build.0 = Debug|Any CPU
 		{8EA15C1B-0BA9-4DA5-A396-34D6EE093A39}.Release|anycpu.ActiveCfg = Release|Any CPU
 		{8EA15C1B-0BA9-4DA5-A396-34D6EE093A39}.Release|anycpu.Build.0 = Release|Any CPU
-		{E3776285-BA45-45A7-9FB7-675431489C29}.Debug|anycpu.ActiveCfg = Debug|Any CPU
-		{E3776285-BA45-45A7-9FB7-675431489C29}.Debug|anycpu.Build.0 = Debug|Any CPU
-		{E3776285-BA45-45A7-9FB7-675431489C29}.Release|anycpu.ActiveCfg = Release|Any CPU
-		{E3776285-BA45-45A7-9FB7-675431489C29}.Release|anycpu.Build.0 = Release|Any CPU
 		{2C98184A-67E7-4F7A-A606-6A4A8CEB9809}.Debug|anycpu.ActiveCfg = Debug|Any CPU
 		{2C98184A-67E7-4F7A-A606-6A4A8CEB9809}.Debug|anycpu.Build.0 = Debug|Any CPU
 		{2C98184A-67E7-4F7A-A606-6A4A8CEB9809}.Release|anycpu.ActiveCfg = Release|Any CPU
