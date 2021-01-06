@@ -4,8 +4,11 @@ using System.Text;
 
 namespace REST_BRZAKALA_core.Interfaces
 {
-    interface IDeck
+    public interface IUserData
     {
-        public List<Card> UserDeck { get; }
+        string Name { get; }
+        string Bio { get; }
+        string Image { get; }
+        
     }
 }

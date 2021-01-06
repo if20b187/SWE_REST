@@ -164,7 +164,7 @@ namespace REST_BRZAKALA_core
 
             while (rdr.Read())
             {
-                
+                // = output ist hier unnötig.
                 output = output + "card1: " +rdr.GetString(0) + " card2: " + rdr.GetString(1) + " card3: " + rdr.GetString(2) + " card4: " + rdr.GetString(3) + "\n";
             }
             con.Close();
@@ -185,6 +185,43 @@ namespace REST_BRZAKALA_core
             cmd.Parameters.AddWithValue("card2", card2);
             cmd.Parameters.AddWithValue("card3", card3);
             cmd.Parameters.AddWithValue("card4", card4);
+            cmd.ExecuteNonQuery();
+            con.Close();
+        }
+
+        public string GetUserData(string user)
+        {
+            using var con = new NpgsqlConnection(cs);
+            con.Open();
+
+            using var cmd = new NpgsqlCommand("SELECT name,bio,image FROM userdata WHERE username=@user", con);
+            cmd.Parameters.AddWithValue("user", user);
+            using NpgsqlDataReader rdr = cmd.ExecuteReader();
+
+            string output = "";
+
+            while (rdr.Read())
+            {
+
+                output = rdr.GetString(0) + "\n" + rdr.GetString(1) + "\n" + rdr.GetString(2);
+            }
+            con.Close();
+
+            return output;
+        }
+
+
+        //Update deck SET card1 = 'undefined', card2 = 'undefined',.... WHERE username='kienboec'; 
+        public void UpdateUserData(string user, string name, string bio, string image)
+        {
+            using var con = new NpgsqlConnection(cs);
+            con.Open();
+
+            using var cmd = new NpgsqlCommand("UPDATE userdata SET name=@name, bio=@bio, image=@image WHERE username=@username", con);
+            cmd.Parameters.AddWithValue("username", user);
+            cmd.Parameters.AddWithValue("name", name);
+            cmd.Parameters.AddWithValue("bio", bio);
+            cmd.Parameters.AddWithValue("image", image);
             cmd.ExecuteNonQuery();
             con.Close();
         }

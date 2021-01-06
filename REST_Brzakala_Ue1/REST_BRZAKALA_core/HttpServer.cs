@@ -19,7 +19,6 @@ namespace REST_BRZAKALA_core
         Response res = new Response();
         Dbconn dbc = new Dbconn();
         Packages pack = new Packages();
-        Deck deck = new Deck();
         public int packid = 0;
 
 
@@ -457,13 +456,12 @@ namespace REST_BRZAKALA_core
                 if (String.Compare(rs.RequestBody["Authorization"], dbc.CheckToken(rs.RequestBody["Authorization"])) == 0)
                 {
                     string username = dbc.TokenToUser(rs.RequestBody["Authorization"]);
-                    List<string> jsonstr = new List<string>();
                     //"[\"1\", \"2\", \"3\", \"4\"]" 
                     // deserializen
                     string json = rs.ContentStr;
                     try
                     {
-                        jsonstr = JsonConvert.DeserializeObject<List<string>>(json);
+                        List<string> jsonstr = JsonConvert.DeserializeObject<List<string>>(json);
                         string confcardid = string.Join(" ", jsonstr.ToArray());
 
                         int c1 = Int32.Parse(confcardid.Split(' ')[0]);
@@ -514,49 +512,72 @@ namespace REST_BRZAKALA_core
                 rs.RequestBody.Clear();
             }
             // SHOW USERDATA - ROUTE: /users/<username>
-            else if (String.Compare(rs.Method, "GET") == 0 && String.Compare(rs.Url, "/users/" + rs.RequestBody["Authorization"]) == 0 && rs.RequestBody.ContainsKey("Authorization"))
+            else if (String.Compare(rs.Method, "GET") == 0 && String.Compare(rs.Url, "/users/" + dbc.TokenToUser(rs.RequestBody["Authorization"])) == 0 && rs.RequestBody.ContainsKey("Authorization"))
             {
                 if (String.Compare(rs.RequestBody["Authorization"], dbc.CheckToken(rs.RequestBody["Authorization"])) == 0)
                 {
-                    /*
-                    List<string> deckCards = new List<string>();
-                    string deck = dbc.GetUserDeck(dbc.TokenToUser(rs.RequestBody["Authorization"]));
-                    Console.WriteLine(deck);
+                    List<UserData> lud = new List<UserData>();
+                    string data = dbc.GetUserData(dbc.TokenToUser(rs.RequestBody["Authorization"]));
 
-
-                    //read line by line
-                    using (StringReader reader = new StringReader(deck))
-                    {
-                        string line;        //line
-                        while ((line = reader.ReadLine()) != null)
-                        {
-                            //Console.WriteLine(line); // Request line by line ausgeben.
-
-                            if (string.IsNullOrEmpty(line))
-                            {
-                                break;
-                            }
-                            if (line.Contains(' '))
-                            {
-                                string c1 = line.Split(' ')[1];
-                                string c2 = line.Split(' ')[3];
-                                string c3 = line.Split(' ')[5];
-                                string c4 = line.Split(' ')[7];
-                                deckCards.Add(c1);
-                                deckCards.Add(c2);
-                                deckCards.Add(c3);
-                                deckCards.Add(c4);
-                            }
-                        }
-                    }
-                    string json = JsonConvert.SerializeObject(deckCards);
-                    */
-
+                    using var reader = new StringReader(data);
+                    string s1 = reader.ReadLine();
+                    string s2 = reader.ReadLine();
+                    string s3 = reader.ReadLine();
+                    Console.WriteLine(s1, s2, s3);
+                    UserData ud = new UserData(s1, s2, s3);
+ 
+                    string json = JsonConvert.SerializeObject(ud);
+                    
                     res.ResponseGetUserData(json);
                 }
                 else
                 {
                     res.ResponseUserDataFail();
+                }
+                stream.Write(res.sendBytes, 0, res.sendBytes.Length);
+                rs.RequestBody.Clear();
+            }
+            // CONFIGURE USERDATA - ROUTE: /users/<username>
+            // Verbessern: Name darf nur username sein?!?!
+            else if (String.Compare(rs.Method, "PUT") == 0 && String.Compare(rs.Url, "/users/" + dbc.TokenToUser(rs.RequestBody["Authorization"])) == 0 && rs.RequestBody.ContainsKey("Authorization"))
+            {
+                if (String.Compare(rs.RequestBody["Authorization"], dbc.CheckToken(rs.RequestBody["Authorization"])) == 0)
+                {
+                    string username = dbc.TokenToUser(rs.RequestBody["Authorization"]);
+
+                    // init new UserData
+                    UserData ud = new UserData("x", "x", "x");
+                    // set Card values
+                    try
+                    {
+                        ud = JsonConvert.DeserializeObject<UserData>(rs.ContentStr);
+                    }
+                    catch (Exception e)
+                    {
+                        Console.WriteLine("------------------");
+                        Console.WriteLine("Wrong JSON Format!");
+                        Console.WriteLine("------------------");
+                    }
+                    Console.WriteLine(username);
+                    Console.WriteLine(ud.Name);
+                    Console.WriteLine(ud.Bio);
+                    Console.WriteLine(ud.Image);
+                    Console.WriteLine(ud.Name.Equals(username, StringComparison.OrdinalIgnoreCase));
+
+                    if (ud.Name.Equals(username, StringComparison.InvariantCultureIgnoreCase))
+                    {
+                        dbc.UpdateUserData(username, ud.Name, ud.Bio, ud.Image);
+                        res.ResponseUpdateUserData();
+                    }
+                    else
+                    {
+                        res.ResponseUpdateUserDataFail();
+                    }
+
+                }
+                else
+                {
+                    res.ResponseUpdateUserDataFail();
                 }
                 stream.Write(res.sendBytes, 0, res.sendBytes.Length);
                 rs.RequestBody.Clear();

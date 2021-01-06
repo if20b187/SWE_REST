@@ -447,6 +447,38 @@ namespace REST_BRZAKALA_core
 			responseMsg = builder.ToString();
 			sendBytes = enc.GetBytes(builder.ToString());
 		}
+		public void ResponseUpdateUserData()
+		{
+			StringBuilder builder = new StringBuilder();
+			builder.AppendLine("HTTP/1.1 200 OK");
+			builder.AppendLine("Content-Type: application/json");
+			builder.AppendLine("");
+			builder.AppendLine("Userdata sucessfull added.");
+			builder.AppendLine("");
+
+			Console.WriteLine("");
+			Console.WriteLine("responce:");
+			Console.WriteLine(builder.ToString());
+			responseMsg = builder.ToString();
+
+			sendBytes = enc.GetBytes(builder.ToString());
+		}
+
+		public void ResponseUpdateUserDataFail()
+		{
+			StringBuilder builder = new StringBuilder();
+			builder.AppendFormat("HTTP/1.1 404 Not Found\n");
+			builder.AppendLine("Content-Type: application/json");
+			builder.AppendLine("");
+			builder.AppendLine("Failed - do you provide your authorization? ");
+			builder.AppendLine("");
+
+			Console.WriteLine("");
+			Console.WriteLine("responce:");
+			Console.WriteLine(builder.ToString());
+			responseMsg = builder.ToString();
+			sendBytes = enc.GetBytes(builder.ToString());
+		}
 
 
 
