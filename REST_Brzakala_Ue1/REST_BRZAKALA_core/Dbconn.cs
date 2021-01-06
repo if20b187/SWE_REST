@@ -95,6 +95,37 @@ namespace REST_BRZAKALA_core
             cmd.ExecuteNonQuery();
             con.Close();
         }
+
+        //VERSION 01
+        public string GetUserCards(string user)
+        {
+            using var con = new NpgsqlConnection(cs);
+            con.Open();
+
+            using var cmd = new NpgsqlCommand("SELECT id,name,damage,element,type FROM usercards WHERE username=@user", con);
+            cmd.Parameters.AddWithValue("user", user);
+            using NpgsqlDataReader rdr = cmd.ExecuteReader();
+
+            string output = "";
+
+            while (rdr.Read())
+            {
+                //Console.WriteLine("{0}", rdr.GetString(0));
+                //{ "id":1,"name":"WaterGoblin","damage":37,"element":"water","type": "spell"}
+                //string lol = String.Format("{ \"id\":{0},\"name\":{1},\"damage\":{2},\"element\":{3},\"element\":{4}}\n", rdr.GetInt32(0).ToString(), rdr.GetString(1), rdr.GetInt32(2).ToString(), rdr.GetString(3), rdr.GetString(4));
+                // JSON VERSUCH
+                //output = output + "{ \"id\":" + rdr.GetInt32(0) + ",\"name\":\"" + rdr.GetString(1) + "\",\"damage\":" + rdr.GetInt32(2) + ",\"element\":\"" + rdr.GetString(3) + "\",\"type\":\"" + rdr.GetString(4) + "\"}";
+                
+                output = output + rdr.GetInt32(0).ToString() + " " + rdr.GetString(1) + " " + rdr.GetInt32(2).ToString() + " " + rdr.GetString(3) + " " + rdr.GetString(4) + "\n";
+            }
+            con.Close();
+
+            // CHECK IF TOKEN IS CORRECT
+            //Console.WriteLine("Token is: {0}", output);
+
+            return output;
+        }
+        
         public Boolean CheckUserExists(string user)
         {
             using var con = new NpgsqlConnection(cs);
@@ -213,15 +244,23 @@ namespace REST_BRZAKALA_core
 
             while (rdr.Read())
             {
-                if(pack.AllCards.Any(p => p.id == maxid))
+                try
                 {
-                    Console.WriteLine("Alle Karten vorhanden.");
+                    if (pack.AllCards.Any(p => p.id == maxid))
+                    {
+                        Console.WriteLine("Alle Karten vorhanden.");
+                    }
+                    else
+                    {
+                        //Console.WriteLine("ADDING CARD);
+                        pack.AllCards.Add(new Card(rdr.GetInt32(0), rdr.GetString(1), rdr.GetInt32(2), rdr.GetString(3), rdr.GetString(4)));
+                    }
                 }
-                else
+                catch (Exception e)
                 {
-                    //Console.WriteLine("ADDING CARD);
-                    pack.AllCards.Add(new Card(rdr.GetInt32(0), rdr.GetString(1), rdr.GetInt32(2), rdr.GetString(3), rdr.GetString(4)));
+                    Console.WriteLine("");
                 }
+                
             }
             con.Close();
 

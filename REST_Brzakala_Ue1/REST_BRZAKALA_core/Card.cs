@@ -21,6 +21,11 @@ namespace REST_BRZAKALA_core
         public string element { get; set; }
         public string type { get; set; }
 
+        public string CardInfo()
+        {
+            return "ID: " + id + " Card: " + name + " Damage: " + damage + " Element: " + element + " Type: " + type + "\n";
+        }
+
         public override string ToString()
         {
             //return "ID: " + id + " Card: " + name + " Damage: " + damage + " Element: " + element + " Type: " + type + "\n";

@@ -8,6 +8,7 @@ using System.Threading;
 using Newtonsoft.Json;
 using System.Linq;
 using System.Text.RegularExpressions;
+using System.Collections;
 
 namespace REST_BRZAKALA_core
 {
@@ -232,6 +233,10 @@ namespace REST_BRZAKALA_core
                     }
 
                 }
+                else
+                {
+                    res.ResponsePackagesFail();
+                }
                 stream.Write(res.sendBytes, 0, res.sendBytes.Length);
                 rs.RequestBody.Clear();
             }
@@ -297,6 +302,62 @@ namespace REST_BRZAKALA_core
                 stream.Write(res.sendBytes, 0, res.sendBytes.Length);
                 rs.RequestBody.Clear();
             }
+            // SHOW ALL AQUIRED CARDS PART - ROUTE: /cards 
+            else if (String.Compare(rs.Method, "GET") == 0 && String.Compare(rs.Url, "/cards") == 0 && rs.RequestBody.ContainsKey("Authorization"))
+            {
+
+                if (String.Compare(rs.RequestBody["Authorization"], dbc.CheckToken(rs.RequestBody["Authorization"])) == 0)
+                {
+                    List<Card> lc = new List<Card>();
+                    string userCards = dbc.GetUserCards(dbc.TokenToUser(rs.RequestBody["Authorization"]));
+                    Console.WriteLine(userCards);
+
+                    //read line by line
+                    
+                    using (StringReader reader = new StringReader(userCards))
+                    {
+                        string line;        //line
+                        while ((line = reader.ReadLine()) != null)
+                        {
+                            //Console.WriteLine(line); // Request line by line ausgeben.
+             
+                            if (string.IsNullOrEmpty(line))
+                            {
+                                break;
+                            }
+                            if (line.Contains(' '))
+                            {
+                                int cid = Int32.Parse(line.Split(' ')[0]);
+                                string cna = line.Split(' ')[1];
+                                int cda = Int32.Parse(line.Split(' ')[2]);
+                                string cel = line.Split(' ')[3];
+                                string cty = line.Split(' ')[4];
+                                lc.Add(new Card(cid,cna,cda,cel,cty));
+                            }
+                        }
+                    }
+                    /* CHECK IF CARDS ARE IN THE LIST:
+                    Console.WriteLine("LISTCARDS:");
+                    foreach (Card aPart in lc)
+                    {
+                        Console.WriteLine(aPart.CardInfo());
+                    }
+                    */
+
+                    // https://www.newtonsoft.com/json/help/html/SerializeCollection.htm 
+                    // Einfach die Liste deserializen wie in dem oben genannten link.
+                    string json = JsonConvert.SerializeObject(lc);
+                    //Console.WriteLine(json);
+
+                    res.ResponseGetAquiredCards(json);
+                }
+                else
+                {
+                    res.ResponseGetAquiredFail();
+                }
+                stream.Write(res.sendBytes, 0, res.sendBytes.Length);
+                rs.RequestBody.Clear();
+            }
             //FALSE ROUTE
             else
             {
@@ -309,8 +370,6 @@ namespace REST_BRZAKALA_core
             client.Close();
 
         }
-
-
 
         public string ToString(NetworkStream stream)
         {

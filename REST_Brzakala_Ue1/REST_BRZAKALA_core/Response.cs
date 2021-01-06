@@ -11,7 +11,7 @@ namespace REST_BRZAKALA_core
 	{
 		// Encoding.GetBytes 
 		static Encoding enc = Encoding.UTF8;
-
+		public Dbconn dbc = new Dbconn();
 
 
 		public Response()
@@ -286,6 +286,37 @@ namespace REST_BRZAKALA_core
 			builder.AppendLine("Content-Type: application/json");
 			builder.AppendLine("");
 			builder.AppendLine("Package Transaction failed. - Do you have more than 5 Coins?");
+			builder.AppendLine("");
+
+			Console.WriteLine("");
+			Console.WriteLine("responce:");
+			Console.WriteLine(builder.ToString());
+			responseMsg = builder.ToString();
+			sendBytes = enc.GetBytes(builder.ToString());
+		}
+		public void ResponseGetAquiredCards(string json)
+		{
+			StringBuilder builder = new StringBuilder();
+			builder.AppendLine("HTTP/1.1 200 OK");
+			builder.AppendLine("Content-Type: application/json");
+			builder.AppendLine("");
+			builder.AppendLine(json);
+
+			Console.WriteLine("");
+			Console.WriteLine("responce:");
+			Console.WriteLine(builder.ToString());
+			responseMsg = builder.ToString();
+
+			sendBytes = enc.GetBytes(builder.ToString());
+		}
+
+		public void ResponseGetAquiredFail()
+		{
+			StringBuilder builder = new StringBuilder();
+			builder.AppendFormat("HTTP/1.1 404 Not Found\n");
+			builder.AppendLine("Content-Type: application/json");
+			builder.AppendLine("");
+			builder.AppendLine("Failed - Already bought some package?");
 			builder.AppendLine("");
 
 			Console.WriteLine("");
