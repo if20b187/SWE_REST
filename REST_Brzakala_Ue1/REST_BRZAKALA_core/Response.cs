@@ -325,6 +325,128 @@ namespace REST_BRZAKALA_core
 			responseMsg = builder.ToString();
 			sendBytes = enc.GetBytes(builder.ToString());
 		}
+		public void ResponseGetDeck(string json)
+		{
+			StringBuilder builder = new StringBuilder();
+			builder.AppendLine("HTTP/1.1 200 OK");
+			builder.AppendLine("Content-Type: application/json");
+			builder.AppendLine("");
+			builder.AppendLine(json);
+
+			Console.WriteLine("");
+			Console.WriteLine("responce:");
+			Console.WriteLine(builder.ToString());
+			responseMsg = builder.ToString();
+
+			sendBytes = enc.GetBytes(builder.ToString());
+		}
+
+		public void ResponseDeckFail()
+		{
+			StringBuilder builder = new StringBuilder();
+			builder.AppendFormat("HTTP/1.1 404 Not Found\n");
+			builder.AppendLine("Content-Type: application/json");
+			builder.AppendLine("");
+			builder.AppendLine("Failed - do you provide your authorization? ");
+			builder.AppendLine("");
+
+			Console.WriteLine("");
+			Console.WriteLine("responce:");
+			Console.WriteLine(builder.ToString());
+			responseMsg = builder.ToString();
+			sendBytes = enc.GetBytes(builder.ToString());
+		}
+		public void ResponseConfigureDeck()
+		{
+			StringBuilder builder = new StringBuilder();
+			builder.AppendLine("HTTP/1.1 200 OK");
+			builder.AppendLine("Content-Type: application/json");
+			builder.AppendLine("");
+			builder.AppendFormat("5 Cards Succesfull added to your Deck.");
+
+			Console.WriteLine("");
+			Console.WriteLine("responce:");
+			Console.WriteLine(builder.ToString());
+			responseMsg = builder.ToString();
+
+			sendBytes = enc.GetBytes(builder.ToString());
+		}
+		public void ResponseConfigureDeckFail()
+		{
+			StringBuilder builder = new StringBuilder();
+			builder.AppendFormat("HTTP/1.1 404 Not Found\n");
+			builder.AppendLine("Content-Type: application/json");
+			builder.AppendLine("");
+			builder.AppendLine("Configure Deck failed. - Do you have the Cards you mentioned in your Cards?");
+			builder.AppendLine("");
+
+			Console.WriteLine("");
+			Console.WriteLine("responce:");
+			Console.WriteLine(builder.ToString());
+			responseMsg = builder.ToString();
+			sendBytes = enc.GetBytes(builder.ToString());
+		}
+		public void ResponseConfigureDeckSame()
+		{
+			StringBuilder builder = new StringBuilder();
+			builder.AppendFormat("HTTP/1.1 404 Not Found\n");
+			builder.AppendLine("Content-Type: application/json");
+			builder.AppendLine("");
+			builder.AppendLine("Configure Deck failed. - Did you enter the same id 2 times?");
+			builder.AppendLine("");
+
+			Console.WriteLine("");
+			Console.WriteLine("responce:");
+			Console.WriteLine(builder.ToString());
+			responseMsg = builder.ToString();
+			sendBytes = enc.GetBytes(builder.ToString());
+		}
+		public void ResponseFormatFail()
+		{
+			StringBuilder builder = new StringBuilder();
+			builder.AppendFormat("HTTP/1.1 404 Not Found\n");
+			builder.AppendLine("Content-Type: application/json");
+			builder.AppendLine("");
+			builder.AppendLine("Your Json Format is False or Card Id not in your Possesion.");
+			builder.AppendLine("");
+
+			Console.WriteLine("");
+			Console.WriteLine("responce:");
+			Console.WriteLine(builder.ToString());
+			responseMsg = builder.ToString();
+			sendBytes = enc.GetBytes(builder.ToString());
+		}
+		public void ResponseGetUserData(string json)
+		{
+			StringBuilder builder = new StringBuilder();
+			builder.AppendLine("HTTP/1.1 200 OK");
+			builder.AppendLine("Content-Type: application/json");
+			builder.AppendLine("");
+			builder.AppendLine(json);
+
+			Console.WriteLine("");
+			Console.WriteLine("responce:");
+			Console.WriteLine(builder.ToString());
+			responseMsg = builder.ToString();
+
+			sendBytes = enc.GetBytes(builder.ToString());
+		}
+
+		public void ResponseUserDataFail()
+		{
+			StringBuilder builder = new StringBuilder();
+			builder.AppendFormat("HTTP/1.1 404 Not Found\n");
+			builder.AppendLine("Content-Type: application/json");
+			builder.AppendLine("");
+			builder.AppendLine("Failed - do you provide your authorization? ");
+			builder.AppendLine("");
+
+			Console.WriteLine("");
+			Console.WriteLine("responce:");
+			Console.WriteLine(builder.ToString());
+			responseMsg = builder.ToString();
+			sendBytes = enc.GetBytes(builder.ToString());
+		}
 
 
 

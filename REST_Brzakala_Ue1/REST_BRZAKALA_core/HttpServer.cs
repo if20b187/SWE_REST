@@ -19,6 +19,7 @@ namespace REST_BRZAKALA_core
         Response res = new Response();
         Dbconn dbc = new Dbconn();
         Packages pack = new Packages();
+        Deck deck = new Deck();
         public int packid = 0;
 
 
@@ -130,6 +131,8 @@ namespace REST_BRZAKALA_core
                 {
                     res.ResponseReg();
                     dbc.Register(rs.acc.Username, rs.acc.Password);
+                    dbc.CreateDeck(rs.acc.Username);
+                    dbc.CreateUserdata(rs.acc.Username);
 
                 }
 
@@ -310,7 +313,7 @@ namespace REST_BRZAKALA_core
                 {
                     List<Card> lc = new List<Card>();
                     string userCards = dbc.GetUserCards(dbc.TokenToUser(rs.RequestBody["Authorization"]));
-                    Console.WriteLine(userCards);
+                    //Console.WriteLine(userCards);
 
                     //read line by line
                     
@@ -358,6 +361,206 @@ namespace REST_BRZAKALA_core
                 stream.Write(res.sendBytes, 0, res.sendBytes.Length);
                 rs.RequestBody.Clear();
             }
+            // SHOW USER DECK - ROUTE: /deck
+            else if (String.Compare(rs.Method, "GET") == 0 && String.Compare(rs.Url, "/deck") == 0 && rs.RequestBody.ContainsKey("Authorization"))
+            {
+
+                if (String.Compare(rs.RequestBody["Authorization"], dbc.CheckToken(rs.RequestBody["Authorization"])) == 0)
+                {
+                    List<string> deckCards = new List<string>();
+                    string deck  = dbc.GetUserDeck(dbc.TokenToUser(rs.RequestBody["Authorization"]));
+                    Console.WriteLine(deck);
+
+                    
+                    //read line by line
+                    using (StringReader reader = new StringReader(deck))
+                    {
+                        string line;        //line
+                        while ((line = reader.ReadLine()) != null)
+                        {
+                            //Console.WriteLine(line); // Request line by line ausgeben.
+
+                            if (string.IsNullOrEmpty(line))
+                            {
+                                break;
+                            }
+                            if (line.Contains(' '))
+                            {
+                                string c1 = line.Split(' ')[1];
+                                string c2 = line.Split(' ')[3];
+                                string c3 = line.Split(' ')[5];
+                                string c4 = line.Split(' ')[7];
+                                deckCards.Add(c1);
+                                deckCards.Add(c2);
+                                deckCards.Add(c3);
+                                deckCards.Add(c4);
+                            }
+                        }
+                    }  
+                    string json = JsonConvert.SerializeObject(deckCards);
+                    
+                    res.ResponseGetDeck(json);
+                }
+                else
+                {
+                    res.ResponseDeckFail();
+                }
+                stream.Write(res.sendBytes, 0, res.sendBytes.Length);
+                rs.RequestBody.Clear();
+            }
+            // SHOW USER DECK BUT IN DIFFERENT REPRESENTATION (PLAIN FORMAT) - ROUTE: /deck?format=plain
+            else if (String.Compare(rs.Method, "GET") == 0 && String.Compare(rs.Url, "/deck?format=plain") == 0 && rs.RequestBody.ContainsKey("Authorization"))
+            {
+
+                if (String.Compare(rs.RequestBody["Authorization"], dbc.CheckToken(rs.RequestBody["Authorization"])) == 0)
+                {
+                    string output = "";
+                    string deck = dbc.GetUserDeck(dbc.TokenToUser(rs.RequestBody["Authorization"]));
+                    Console.WriteLine(deck);
+
+
+                    //read line by line
+                    using (StringReader reader = new StringReader(deck))
+                    {
+                        string line;        //line
+                        while ((line = reader.ReadLine()) != null)
+                        {
+                            //Console.WriteLine(line); // Request line by line ausgeben.
+
+                            if (string.IsNullOrEmpty(line))
+                            {
+                                break;
+                            }
+                            if (line.Contains(' '))
+                            {
+                                string c1 = line.Split(' ')[1];
+                                string c2 = line.Split(' ')[3];
+                                string c3 = line.Split(' ')[5];
+                                string c4 = line.Split(' ')[7];
+                                output = "Card1: " + c1 + "\nCard2: " + c2 + "\nCard3: " + c3 + "\nCard4: " + c4;
+                            }
+                        }
+                    }
+                    string info = "Card | id | name | damage | element | type\n";
+                    res.ResponseGetDeck(info + output);
+                }
+                else
+                {
+                    res.ResponseDeckFail();
+                }
+                stream.Write(res.sendBytes, 0, res.sendBytes.Length);
+                rs.RequestBody.Clear();
+            }
+            // CONFIGURE USER DECK - ROUTE: /deck
+            else if (String.Compare(rs.Method, "PUT") == 0 && String.Compare(rs.Url, "/deck") == 0 && rs.RequestBody.ContainsKey("Authorization"))
+            {
+                if (String.Compare(rs.RequestBody["Authorization"], dbc.CheckToken(rs.RequestBody["Authorization"])) == 0)
+                {
+                    string username = dbc.TokenToUser(rs.RequestBody["Authorization"]);
+                    List<string> jsonstr = new List<string>();
+                    //"[\"1\", \"2\", \"3\", \"4\"]" 
+                    // deserializen
+                    string json = rs.ContentStr;
+                    try
+                    {
+                        jsonstr = JsonConvert.DeserializeObject<List<string>>(json);
+                        string confcardid = string.Join(" ", jsonstr.ToArray());
+
+                        int c1 = Int32.Parse(confcardid.Split(' ')[0]);
+                        int c2 = Int32.Parse(confcardid.Split(' ')[1]);
+                        int c3 = Int32.Parse(confcardid.Split(' ')[2]);
+                        int c4 = Int32.Parse(confcardid.Split(' ')[3]);
+
+                        // ERLAUBT : 1, 2, 3, 4 
+                        // NICHT ERLAUBT: 1, 2, 2, 4
+                        if (SameCards(c1, c2, c3, c4))
+                        {
+                            res.ResponseConfigureDeckSame();
+                        }
+                        else if (dbc.CheckUserHasCard(username, c1, c1) && dbc.CheckUserHasCard(username, c2, c2) && dbc.CheckUserHasCard(username, c3, c3) && dbc.CheckUserHasCard(username, c4, c4))
+                        {
+                            Console.WriteLine("Nice, Alle Karten vorhanden");
+                            string s1 = dbc.FullCardInfo(c1);
+                            string s2 = dbc.FullCardInfo(c2);
+                            string s3 = dbc.FullCardInfo(c3);
+                            string s4 = dbc.FullCardInfo(c4);
+                            s1= s1.Replace(" ", ",");
+                            s2 = s2.Replace(" ", ",");
+                            s3 = s3.Replace(" ", ",");
+                            s4 = s4.Replace(" ", ",");
+                            //Console.WriteLine("{0} \n {1} \n {2} \n {3}\n", s1,s2,s3,s4);
+                            dbc.UpdateDeck(username,s1,s2,s3,s4);
+                            res.ResponseConfigureDeck();
+                        }
+                        else
+                        {
+                            //Console.WriteLine("Eine oder mehrere Karten nicht vorhanden");
+                            res.ResponseConfigureDeckFail();
+                        }
+
+                    }
+                    catch (Exception e)
+                    {
+                        Console.WriteLine("False Format or Card Id not in your Possesion.");
+                        res.ResponseFormatFail();
+                    }
+
+                }
+                else
+                {
+                    res.ResponseConfigureDeckFail();
+                }
+                stream.Write(res.sendBytes, 0, res.sendBytes.Length);
+                rs.RequestBody.Clear();
+            }
+            // SHOW USERDATA - ROUTE: /users/<username>
+            else if (String.Compare(rs.Method, "GET") == 0 && String.Compare(rs.Url, "/users/" + rs.RequestBody["Authorization"]) == 0 && rs.RequestBody.ContainsKey("Authorization"))
+            {
+                if (String.Compare(rs.RequestBody["Authorization"], dbc.CheckToken(rs.RequestBody["Authorization"])) == 0)
+                {
+                    /*
+                    List<string> deckCards = new List<string>();
+                    string deck = dbc.GetUserDeck(dbc.TokenToUser(rs.RequestBody["Authorization"]));
+                    Console.WriteLine(deck);
+
+
+                    //read line by line
+                    using (StringReader reader = new StringReader(deck))
+                    {
+                        string line;        //line
+                        while ((line = reader.ReadLine()) != null)
+                        {
+                            //Console.WriteLine(line); // Request line by line ausgeben.
+
+                            if (string.IsNullOrEmpty(line))
+                            {
+                                break;
+                            }
+                            if (line.Contains(' '))
+                            {
+                                string c1 = line.Split(' ')[1];
+                                string c2 = line.Split(' ')[3];
+                                string c3 = line.Split(' ')[5];
+                                string c4 = line.Split(' ')[7];
+                                deckCards.Add(c1);
+                                deckCards.Add(c2);
+                                deckCards.Add(c3);
+                                deckCards.Add(c4);
+                            }
+                        }
+                    }
+                    string json = JsonConvert.SerializeObject(deckCards);
+                    */
+
+                    res.ResponseGetUserData(json);
+                }
+                else
+                {
+                    res.ResponseUserDataFail();
+                }
+                stream.Write(res.sendBytes, 0, res.sendBytes.Length);
+                rs.RequestBody.Clear();
+            }
             //FALSE ROUTE
             else
             {
@@ -370,7 +573,17 @@ namespace REST_BRZAKALA_core
             client.Close();
 
         }
-
+        public Boolean SameCards(int a, int b, int c, int d)
+        {
+            if(a == b || a == c || a == d || b == c || b == d || c == d)
+            {
+                return true;
+            }
+            else
+            {
+                return false;
+            }
+        }
         public string ToString(NetworkStream stream)
         {
             MemoryStream memoryStream = new MemoryStream();

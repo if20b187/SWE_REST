@@ -55,6 +55,35 @@ namespace REST_BRZAKALA_core
             cmd.ExecuteNonQuery();
             con.Close();
         }
+        public void CreateDeck(string username)
+        {
+            using var con = new NpgsqlConnection(cs);
+            con.Open();
+
+            using var cmd = new NpgsqlCommand("INSERT INTO deck VALUES (@username, @c1, @c2, @c3, @c4)", con);
+
+            cmd.Parameters.AddWithValue("username", username);
+            cmd.Parameters.AddWithValue("c1", "undefined");
+            cmd.Parameters.AddWithValue("c2", "undefined");
+            cmd.Parameters.AddWithValue("c3", "undefined");
+            cmd.Parameters.AddWithValue("c4", "undefined");
+            cmd.ExecuteNonQuery();
+            con.Close();
+        }
+        public void CreateUserdata(string username)
+        {
+            using var con = new NpgsqlConnection(cs);
+            con.Open();
+
+            using var cmd = new NpgsqlCommand("INSERT INTO userdata VALUES (@username, @name, @bio, @image)", con);
+
+            cmd.Parameters.AddWithValue("username", username);
+            cmd.Parameters.AddWithValue("name", "undefined");
+            cmd.Parameters.AddWithValue("bio", "undefined");
+            cmd.Parameters.AddWithValue("image", "undefined");
+            cmd.ExecuteNonQuery();
+            con.Close();
+        }
         public void Packages(int id, int card1, int card2, int card3, int card4, int card5)
         {
             using var con = new NpgsqlConnection(cs);
@@ -96,7 +125,7 @@ namespace REST_BRZAKALA_core
             con.Close();
         }
 
-        //VERSION 01
+        
         public string GetUserCards(string user)
         {
             using var con = new NpgsqlConnection(cs);
@@ -119,13 +148,47 @@ namespace REST_BRZAKALA_core
                 output = output + rdr.GetInt32(0).ToString() + " " + rdr.GetString(1) + " " + rdr.GetInt32(2).ToString() + " " + rdr.GetString(3) + " " + rdr.GetString(4) + "\n";
             }
             con.Close();
+            return output;
+        }
 
-            // CHECK IF TOKEN IS CORRECT
-            //Console.WriteLine("Token is: {0}", output);
+        public string GetUserDeck(string user)
+        {
+            using var con = new NpgsqlConnection(cs);
+            con.Open();
+
+            using var cmd = new NpgsqlCommand("SELECT card1,card2,card3,card4 FROM deck WHERE username=@user", con);
+            cmd.Parameters.AddWithValue("user", user);
+            using NpgsqlDataReader rdr = cmd.ExecuteReader();
+
+            string output = "";
+
+            while (rdr.Read())
+            {
+                
+                output = output + "card1: " +rdr.GetString(0) + " card2: " + rdr.GetString(1) + " card3: " + rdr.GetString(2) + " card4: " + rdr.GetString(3) + "\n";
+            }
+            con.Close();
 
             return output;
         }
-        
+
+
+        //Update deck SET card1 = 'undefined', card2 = 'undefined',.... WHERE username='kienboec'; 
+        public void UpdateDeck(string user, string card1, string card2, string card3, string card4)
+        {
+            using var con = new NpgsqlConnection(cs);
+            con.Open();
+
+            using var cmd = new NpgsqlCommand("UPDATE deck SET card1=@card1, card2=@card2, card3=@card3, card4=@card4 WHERE username=@username", con);
+            cmd.Parameters.AddWithValue("username", user);
+            cmd.Parameters.AddWithValue("card1", card1);
+            cmd.Parameters.AddWithValue("card2", card2);
+            cmd.Parameters.AddWithValue("card3", card3);
+            cmd.Parameters.AddWithValue("card4", card4);
+            cmd.ExecuteNonQuery();
+            con.Close();
+        }
+
         public Boolean CheckUserExists(string user)
         {
             using var con = new NpgsqlConnection(cs);
@@ -157,6 +220,42 @@ namespace REST_BRZAKALA_core
             foreach (Object obj in usersArr)
             Console.WriteLine("   user:{0}", obj);
             */
+        }
+        public Boolean CheckUserHasCard(string user, int iddb, int idcontains)
+        {
+            using var con = new NpgsqlConnection(cs);
+            con.Open();
+
+            using var cmd = new NpgsqlCommand("SELECT id FROM usercards where username=@user AND id=@id", con);
+            cmd.Parameters.AddWithValue("user", user);
+            cmd.Parameters.AddWithValue("id", iddb);
+            using NpgsqlDataReader rdr = cmd.ExecuteReader();
+
+            Boolean cont = false;
+            string idCard = "";
+            while (rdr.Read())
+            {
+                idCard = rdr.GetInt32(0).ToString();
+            }
+
+            try
+            {
+                if ( String.Compare(idCard, idcontains.ToString())== 0)
+                {
+                    cont = true;
+                }
+                else
+                {
+                    cont = false;
+                }
+            }
+            catch(Exception e)
+            {
+                Console.WriteLine("Card id existiert nicht.");
+            }
+
+            return cont;
+
         }
         public int CardMaxId()
         {
