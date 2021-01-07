@@ -84,6 +84,20 @@ namespace REST_BRZAKALA_core
             cmd.ExecuteNonQuery();
             con.Close();
         }
+        public void CreateUserstats(string username)
+        {
+            using var con = new NpgsqlConnection(cs);
+            con.Open();
+
+            using var cmd = new NpgsqlCommand("INSERT INTO userstats VALUES (@username, @wins, @draws, @loses)", con);
+
+            cmd.Parameters.AddWithValue("username", username);
+            cmd.Parameters.AddWithValue("wins", 0);
+            cmd.Parameters.AddWithValue("draws", 0);
+            cmd.Parameters.AddWithValue("loses", 0);
+            cmd.ExecuteNonQuery();
+            con.Close();
+        }
         public void Packages(int id, int card1, int card2, int card3, int card4, int card5)
         {
             using var con = new NpgsqlConnection(cs);
@@ -204,6 +218,26 @@ namespace REST_BRZAKALA_core
             {
 
                 output = rdr.GetString(0) + "\n" + rdr.GetString(1) + "\n" + rdr.GetString(2);
+            }
+            con.Close();
+
+            return output;
+        }
+        public string GetUserStats(string user)
+        {
+            using var con = new NpgsqlConnection(cs);
+            con.Open();
+
+            using var cmd = new NpgsqlCommand("SELECT wins,draws,loses FROM userstats WHERE username=@user", con);
+            cmd.Parameters.AddWithValue("user", user);
+            using NpgsqlDataReader rdr = cmd.ExecuteReader();
+
+            string output = "";
+
+            while (rdr.Read())
+            {
+
+                output = rdr.GetInt32(0).ToString() + "\n" + rdr.GetInt32(1).ToString() + "\n" + rdr.GetInt32(2).ToString();
             }
             con.Close();
 
@@ -465,13 +499,21 @@ namespace REST_BRZAKALA_core
         {
             // Example:
             // Basic testuser-mtcgToken
-            string userToken = CheckToken(token);
-            // testuser-mtcgToken
-            string username = userToken.Split(' ')[1];
+            try { 
+                string userToken = CheckToken(token);
+                // testuser-mtcgToken
+                string username = userToken.Split(' ')[1];
+                username = string.Concat(username.Reverse().Skip(10).Reverse());
+                return username;
+            }
+            catch(Exception e)
+            {
+                return "";
+            }
             // testuser
-            username = string.Concat(username.Reverse().Skip(10).Reverse());
+            
 
-            return username;
+            
         }
         public int CheckUserCoins(string user)
         {

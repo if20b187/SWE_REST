@@ -132,6 +132,7 @@ namespace REST_BRZAKALA_core
                     dbc.Register(rs.acc.Username, rs.acc.Password);
                     dbc.CreateDeck(rs.acc.Username);
                     dbc.CreateUserdata(rs.acc.Username);
+                    dbc.CreateUserstats(rs.acc.Username);
 
                 }
 
@@ -538,7 +539,6 @@ namespace REST_BRZAKALA_core
                 rs.RequestBody.Clear();
             }
             // CONFIGURE USERDATA - ROUTE: /users/<username>
-            // Verbessern: Name darf nur username sein?!?!
             else if (String.Compare(rs.Method, "PUT") == 0 && String.Compare(rs.Url, "/users/" + dbc.TokenToUser(rs.RequestBody["Authorization"])) == 0 && rs.RequestBody.ContainsKey("Authorization"))
             {
                 if (String.Compare(rs.RequestBody["Authorization"], dbc.CheckToken(rs.RequestBody["Authorization"])) == 0)
@@ -558,25 +558,69 @@ namespace REST_BRZAKALA_core
                         Console.WriteLine("Wrong JSON Format!");
                         Console.WriteLine("------------------");
                     }
-                    Console.WriteLine(username);
-                    Console.WriteLine(ud.Name);
-                    Console.WriteLine(ud.Bio);
-                    Console.WriteLine(ud.Image);
-                    Console.WriteLine(ud.Name.Equals(username, StringComparison.OrdinalIgnoreCase));
-
-                    if (ud.Name.Equals(username, StringComparison.InvariantCultureIgnoreCase))
-                    {
-                        dbc.UpdateUserData(username, ud.Name, ud.Bio, ud.Image);
-                        res.ResponseUpdateUserData();
-                    }
-                    else
-                    {
-                        res.ResponseUpdateUserDataFail();
-                    }
-
+                    
+                    dbc.UpdateUserData(username, ud.Name, ud.Bio, ud.Image);
+                    res.ResponseUpdateUserData();
+   
                 }
                 else
                 {
+                    res.ResponseUpdateUserDataFail();
+                }
+                stream.Write(res.sendBytes, 0, res.sendBytes.Length);
+                rs.RequestBody.Clear();
+            }
+            // SHOW USER STATS - ROUTE: /stats
+            else if (String.Compare(rs.Method, "GET") == 0 && String.Compare(rs.Url, "/stats") == 0 && rs.RequestBody.ContainsKey("Authorization"))
+            {
+                if (String.Compare(rs.RequestBody["Authorization"], dbc.CheckToken(rs.RequestBody["Authorization"])) == 0)
+                {
+                    List<Stats> us = new List<Stats>();
+                    string data = dbc.GetUserStats(dbc.TokenToUser(rs.RequestBody["Authorization"]));
+
+                    using var reader = new StringReader(data);
+                    int i1 = Int32.Parse(reader.ReadLine());
+                    int i2 = Int32.Parse(reader.ReadLine());
+                    int i3 = Int32.Parse(reader.ReadLine());
+                    //Console.WriteLine("{0}{1}{2}",i1,i2,i3);
+                    Stats userStats = new Stats(i1,i2,i3);
+
+
+                    string json = JsonConvert.SerializeObject(userStats);
+
+                    res.ResponseGetUserStats(json);
+                }
+                else
+                {
+                    // Selbe Fehlermeldung - "Failed - do you provide your authorization?"
+                    res.ResponseUpdateUserDataFail();
+                }
+                stream.Write(res.sendBytes, 0, res.sendBytes.Length);
+                rs.RequestBody.Clear();
+            }
+            // SHOW scoreboard - ROUTE: /score
+            // select * from userstats group by wins,draws,loses,username order by wins DESC;
+            else if (String.Compare(rs.Method, "GET") == 0 && String.Compare(rs.Url, "/score") == 0 && rs.RequestBody.ContainsKey("Authorization"))
+            {
+                if (String.Compare(rs.RequestBody["Authorization"], dbc.CheckToken(rs.RequestBody["Authorization"])) == 0)
+                {
+                    List<Stats> us = new List<Stats>();
+                    string data = dbc.GetUserStats(dbc.TokenToUser(rs.RequestBody["Authorization"]));
+
+                    using var reader = new StringReader(data);
+                    int i1 = Int32.Parse(reader.ReadLine());
+                    int i2 = Int32.Parse(reader.ReadLine());
+                    int i3 = Int32.Parse(reader.ReadLine());
+                    //Console.WriteLine("{0}{1}{2}",i1,i2,i3);
+                    Stats userStats = new Stats(i1, i2, i3);
+
+                    string json = JsonConvert.SerializeObject(userStats);
+
+                    res.ResponseGetUserStats(json);
+                }
+                else
+                {
+                    // Selbe Fehlermeldung - "Failed - do you provide your authorization?"
                     res.ResponseUpdateUserDataFail();
                 }
                 stream.Write(res.sendBytes, 0, res.sendBytes.Length);
