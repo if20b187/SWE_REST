@@ -575,7 +575,6 @@ namespace REST_BRZAKALA_core
             {
                 if (String.Compare(rs.RequestBody["Authorization"], dbc.CheckToken(rs.RequestBody["Authorization"])) == 0)
                 {
-                    List<Stats> us = new List<Stats>();
                     string data = dbc.GetUserStats(dbc.TokenToUser(rs.RequestBody["Authorization"]));
 
                     using var reader = new StringReader(data);
@@ -604,19 +603,33 @@ namespace REST_BRZAKALA_core
             {
                 if (String.Compare(rs.RequestBody["Authorization"], dbc.CheckToken(rs.RequestBody["Authorization"])) == 0)
                 {
-                    List<Stats> us = new List<Stats>();
-                    string data = dbc.GetUserStats(dbc.TokenToUser(rs.RequestBody["Authorization"]));
+                    List<Score> scorestats = new List<Score>();
+                    string score = dbc.GetUserScore();
+                    Console.WriteLine(score);
 
-                    using var reader = new StringReader(data);
-                    int i1 = Int32.Parse(reader.ReadLine());
-                    int i2 = Int32.Parse(reader.ReadLine());
-                    int i3 = Int32.Parse(reader.ReadLine());
-                    //Console.WriteLine("{0}{1}{2}",i1,i2,i3);
-                    Stats userStats = new Stats(i1, i2, i3);
+                    //read line by line
+                    using (StringReader reader = new StringReader(score))
+                    {
+                        string line;        //line
+                        while ((line = reader.ReadLine()) != null)
+                        {
+                            if (string.IsNullOrEmpty(line))
+                            {
+                                break;
+                            }
+                            if (line.Contains(' '))
+                            {
+                                string c1 = line.Split(' ')[0];
+                                int c2 = Int32.Parse(line.Split(' ')[1]);
+                                int c3 = Int32.Parse(line.Split(' ')[2]);
+                                int c4 = Int32.Parse(line.Split(' ')[3]);
+                                scorestats.Add(new Score(c1,c2,c3,c4));
+                            }
+                        }
+                    }
+                    string json = JsonConvert.SerializeObject(scorestats);
 
-                    string json = JsonConvert.SerializeObject(userStats);
-
-                    res.ResponseGetUserStats(json);
+                    res.ResponseGetDeck(json);
                 }
                 else
                 {

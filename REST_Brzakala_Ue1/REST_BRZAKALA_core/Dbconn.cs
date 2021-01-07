@@ -244,6 +244,25 @@ namespace REST_BRZAKALA_core
             return output;
         }
 
+        public string GetUserScore()
+        {
+            using var con = new NpgsqlConnection(cs);
+            con.Open();
+            
+            using var cmd = new NpgsqlCommand("SELECT * FROM userstats GROUP BY wins, draws, loses, username ORDER BY wins DESC", con);
+            using NpgsqlDataReader rdr = cmd.ExecuteReader();
+
+            string output = "";
+
+            while (rdr.Read())
+            {
+                output = output + rdr.GetString(0) + " " + rdr.GetInt32(1).ToString() + " " + rdr.GetInt32(2).ToString() + " " + rdr.GetInt32(2).ToString() + "\n";
+            }
+            con.Close();
+
+            return output;
+        }
+
 
         //Update deck SET card1 = 'undefined', card2 = 'undefined',.... WHERE username='kienboec'; 
         public void UpdateUserData(string user, string name, string bio, string image)
