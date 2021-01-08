@@ -156,6 +156,16 @@ namespace REST_BRZAKALA_core
             cmd.ExecuteNonQuery();
             con.Close();
         }
+        public void DeleteTrading(int id)
+        {
+            using var con = new NpgsqlConnection(cs);
+            con.Open();
+
+            using var cmd = new NpgsqlCommand("DELETE FROM tradings WHERE tradingid=@id", con);
+            cmd.Parameters.AddWithValue("id", id);
+            cmd.ExecuteNonQuery();
+            con.Close();
+        }
         public void CoinsUpdate(string user)
         {
             using var con = new NpgsqlConnection(cs);
@@ -603,6 +613,25 @@ namespace REST_BRZAKALA_core
 
             return output;
         }
+        public int GetCardFromTradingID(int id)
+        {
+            using var con = new NpgsqlConnection(cs);
+            con.Open();
+
+            using var cmd = new NpgsqlCommand("SELECT card FROM tradings where tradingid=@id", con);
+            cmd.Parameters.AddWithValue("id", id);
+            using NpgsqlDataReader rdr = cmd.ExecuteReader();
+
+            int output = 0;
+
+            while (rdr.Read())
+            {
+                //Console.WriteLine("{0}", rdr.GetString(0));
+                output = Int32.Parse(rdr.GetString(0));
+            }
+            con.Close();
+            return output;
+        }
         public string CheckCardId(int id)
         {
             using var con = new NpgsqlConnection(cs);
@@ -642,10 +671,26 @@ namespace REST_BRZAKALA_core
                 output = rdr.GetInt32(0);
             }
             con.Close();
-
-            //Console.WriteLine("CardId is: {0}", output);
-
             return output.ToString();
+        }
+        public string CheckTradingUsernameId(int id)
+        {
+            using var con = new NpgsqlConnection(cs);
+            con.Open();
+
+            using var cmd = new NpgsqlCommand("SELECT username FROM tradings where tradingid=@id", con);
+            cmd.Parameters.AddWithValue("id", id);
+            using NpgsqlDataReader rdr = cmd.ExecuteReader();
+
+            string output = "";
+
+            while (rdr.Read())
+            {
+                //Console.WriteLine("{0}", rdr.GetString(0));
+                output = rdr.GetString(0);
+            }
+            con.Close();
+            return output;
         }
         public string FullCardInfo(int id)
         {

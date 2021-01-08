@@ -73,6 +73,8 @@ namespace REST_BRZAKALA_core
 			Console.WriteLine("");
 			res.lastPart = rs.Url.Split('/').Last();
 			*/
+            string urllast = rs.Url.Split('/').Last();
+            Console.WriteLine("LASTPART: {0}",urllast);
             // GET ALL
             if (String.Compare(rs.Method, "GET") == 0 && String.Compare(rs.Url, "/message") == 0)
             {
@@ -692,7 +694,6 @@ namespace REST_BRZAKALA_core
                 /*      POST VERLAUF:
                  *      Contentstr beim post: "{\"Tradingid\": \"1\", \"Karte\": \"14\", \"MinDamage\": \"1\", \"Type\": \"monster\"}"
                  *      CheckUserhasCard() - Checkt ob user die karte 12 zb hat.
-                 * 
                  *      Ob er überhaupt die 14 id hat - ja -> Ihm sie löschen von usercards und die 14id  
                  * 
                  */
@@ -739,8 +740,46 @@ namespace REST_BRZAKALA_core
                         {
                             res.ResponseTradingFail();
                         }
-                        
+                    }
+                }
+                else
+                {
+                    // Selbe Fehlermeldung - "Failed - do you provide your authorization?"
+                    res.ResponseUpdateUserDataFail();
+                }
+                stream.Write(res.sendBytes, 0, res.sendBytes.Length);
+                rs.RequestBody.Clear();
+            }
+            // DELETE TRADING CARD - ROUTE: /tradings/<id>
+            else if (String.Compare(rs.Method, "DELETE") == 0 && String.Compare(rs.Url, "/tradings/" + urllast) == 0 && rs.RequestBody.ContainsKey("Authorization"))
+            {
+                /*      Check ob: der Authorization ist der ersteller des Id Trading - String Compare (username, dbc.getUserFromTradingId(Stringid)
+                 */
+                string username = dbc.TokenToUser(rs.RequestBody["Authorization"]);
 
+                if (String.Compare(rs.RequestBody["Authorization"], dbc.CheckToken(rs.RequestBody["Authorization"])) == 0 && String.Compare(username, dbc.CheckTradingUsernameId(Int32.Parse(urllast))) == 0)
+                {
+                    try
+                    {
+                        // dbc.GetCardfromTradingId()  -- gibt card zurück von tradings
+                        // dbc.Getfullcardinfo()  -- gibt full card info zurück string
+                        // dbc.AddUsercards() -- added die Karte dem user hinzu.
+                        int cid = dbc.GetCardFromTradingID(Int32.Parse(urllast));
+                        string fullc = dbc.FullCardInfo(cid);
+
+                        int cid1 = Int32.Parse(fullc.Split(' ')[0]); 
+                        string cname1 = fullc.Split(' ')[1]; 
+                        int cdamage1 = Int32.Parse(fullc.Split(' ')[2]); 
+                        string celement1 = fullc.Split(' ')[3]; 
+                        string ctype1 = fullc.Split(' ')[4];
+
+                        dbc.AddUserCard(username,cid1,cname1,cdamage1,celement1,ctype1);
+                        dbc.DeleteTrading(Int32.Parse(urllast));
+                        res.ResponseTradingDelete();
+                    }
+                    catch (Exception e)
+                    {
+                        res.ResponseTradingDeleteFail();
                     }
                 }
                 else
