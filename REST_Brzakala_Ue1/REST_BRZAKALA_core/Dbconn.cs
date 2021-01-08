@@ -39,6 +39,21 @@ namespace REST_BRZAKALA_core
             cmd.ExecuteNonQuery();
             con.Close();
         }
+        public void Trading(int id, string card, int mdamage,  string type, string username)
+        {
+            using var con = new NpgsqlConnection(cs);
+            con.Open();
+
+            using var cmd = new NpgsqlCommand("INSERT INTO tradings VALUES (@id, @card, @damage, @type, @username)", con);
+
+            cmd.Parameters.AddWithValue("id", id);
+            cmd.Parameters.AddWithValue("card", card);
+            cmd.Parameters.AddWithValue("damage", mdamage);
+            cmd.Parameters.AddWithValue("type", type);
+            cmd.Parameters.AddWithValue("username", username);
+            cmd.ExecuteNonQuery();
+            con.Close();
+        }
         public void AddUserCard(string username, int id, string name, int damage, string element, string type)
         {
             using var con = new NpgsqlConnection(cs);
@@ -70,6 +85,7 @@ namespace REST_BRZAKALA_core
             cmd.ExecuteNonQuery();
             con.Close();
         }
+        
         public void CreateUserdata(string username)
         {
             using var con = new NpgsqlConnection(cs);
@@ -124,6 +140,19 @@ namespace REST_BRZAKALA_core
             string Token = "Basic " + user + "-mtcgToken";
             cmd.Parameters.AddWithValue("username", user);
             cmd.Parameters.AddWithValue("token", Token);
+            cmd.ExecuteNonQuery();
+            con.Close();
+        }
+        // DELETE FROM usercards WHERE ctid IN(Select ctid from usercards where username = 'kienboec' AND id = '6' LIMIT 1);
+        public void TradingDeleteUserCard(string username, int id)
+        {
+            using var con = new NpgsqlConnection(cs);
+            con.Open();
+
+            using var cmd = new NpgsqlCommand("DELETE FROM usercards WHERE ctid IN(Select ctid from usercards where username=@username AND id=@id LIMIT 1)", con);
+            
+            cmd.Parameters.AddWithValue("username", username);
+            cmd.Parameters.AddWithValue("id", id);
             cmd.ExecuteNonQuery();
             con.Close();
         }
@@ -580,6 +609,28 @@ namespace REST_BRZAKALA_core
             con.Open();
 
             using var cmd = new NpgsqlCommand("SELECT id FROM card where id=@id", con);
+            cmd.Parameters.AddWithValue("id", id);
+            using NpgsqlDataReader rdr = cmd.ExecuteReader();
+
+            int output = 0;
+
+            while (rdr.Read())
+            {
+                //Console.WriteLine("{0}", rdr.GetString(0));
+                output = rdr.GetInt32(0);
+            }
+            con.Close();
+
+            //Console.WriteLine("CardId is: {0}", output);
+
+            return output.ToString();
+        }
+        public string CheckTradingId(int id)
+        {
+            using var con = new NpgsqlConnection(cs);
+            con.Open();
+
+            using var cmd = new NpgsqlCommand("SELECT tradingid FROM tradings where tradingid=@id", con);
             cmd.Parameters.AddWithValue("id", id);
             using NpgsqlDataReader rdr = cmd.ExecuteReader();
 

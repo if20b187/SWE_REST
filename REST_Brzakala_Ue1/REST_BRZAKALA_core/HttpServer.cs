@@ -666,7 +666,8 @@ namespace REST_BRZAKALA_core
                             if (line.Contains(' '))
                             {
                                 int c1 = Int32.Parse(line.Split(' ')[0]);
-                                string c2 = line.Split(' ')[1];
+                                string c2 = dbc.FullCardInfo(Int32.Parse(line.Split(' ')[1]));
+                                c2 = c2.Replace(" ", ",");
                                 int c3 = Int32.Parse(line.Split(' ')[2]);
                                 string c4 = line.Split(' ')[3];
                                 tradingDeals.Add(new Trading(c1, c2, c3, c4));
@@ -676,6 +677,71 @@ namespace REST_BRZAKALA_core
                     string json = JsonConvert.SerializeObject(tradingDeals);
 
                     res.ResponseGetDeck(json);
+                }
+                else
+                {
+                    // Selbe Fehlermeldung - "Failed - do you provide your authorization?"
+                    res.ResponseUpdateUserDataFail();
+                }
+                stream.Write(res.sendBytes, 0, res.sendBytes.Length);
+                rs.RequestBody.Clear();
+            }
+            // POST TRADING CARD - ROUTE: /tradings
+            else if (String.Compare(rs.Method, "POST") == 0 && String.Compare(rs.Url, "/tradings") == 0 && rs.RequestBody.ContainsKey("Authorization"))
+            {
+                /*      POST VERLAUF:
+                 *      Contentstr beim post: "{\"Tradingid\": \"1\", \"Karte\": \"14\", \"MinDamage\": \"1\", \"Type\": \"monster\"}"
+                 *      CheckUserhasCard() - Checkt ob user die karte 12 zb hat.
+                 * 
+                 *      Ob er überhaupt die 14 id hat - ja -> Ihm sie löschen von usercards und die 14id  
+                 * 
+                 */
+                string username = dbc.TokenToUser(rs.RequestBody["Authorization"]);
+
+                if (String.Compare(rs.RequestBody["Authorization"], dbc.CheckToken(rs.RequestBody["Authorization"])) == 0)
+                {
+                    // init new Trading
+                    Trading td = new Trading(0,"x",0,"x");
+                    // set Trading values
+                    try
+                    {
+                        td = JsonConvert.DeserializeObject<Trading>(rs.ContentStr);
+                        Console.WriteLine(td);
+                    }
+                    catch (Exception e)
+                    {
+                        Console.WriteLine("------------------");
+                        Console.WriteLine("Wrong JSON Format!");
+                        Console.WriteLine("------------------");
+                    }
+                    // Check if die Id ist schon enthalten im Trading
+                    if (String.Compare(dbc.CheckTradingId(td.Tradingid), td.Tradingid.ToString()) == 0)
+                    {
+                        res.ResponseTradingIdFail(); // Hier fehler das es die Id schon gibt
+                    }
+                    else if (td.Tradingid == 0)
+                    {
+                        res.ResponseTradingFail();
+                    }
+                    else if (!dbc.CheckUserHasCard(username,Int32.Parse(td.Karte), Int32.Parse(td.Karte)))
+                    {
+                        res.ResponseTradingFailCard();
+                    }
+                    else
+                    {
+                        try
+                        {
+                            dbc.Trading(td.Tradingid, td.Karte, td.MinDamage, td.Typ, username);
+                            dbc.TradingDeleteUserCard(username, Int32.Parse(td.Karte));
+                            res.ResponsePostCardTrade();
+                        }
+                        catch(Exception e)
+                        {
+                            res.ResponseTradingFail();
+                        }
+                        
+
+                    }
                 }
                 else
                 {

@@ -234,6 +234,51 @@ namespace REST_BRZAKALA_core
 			responseMsg = builder.ToString();
 			sendBytes = enc.GetBytes(builder.ToString());
 		}
+		public void ResponseTradingFail()
+		{
+			StringBuilder builder = new StringBuilder();
+			builder.AppendFormat("HTTP/1.1 404 Not Found\n");
+			builder.AppendLine("Content-Type: application/json");
+			builder.AppendLine("");
+			builder.AppendLine("Creating Trading failed.");
+			builder.AppendLine("");
+
+			Console.WriteLine("");
+			Console.WriteLine("responce:");
+			Console.WriteLine(builder.ToString());
+			responseMsg = builder.ToString();
+			sendBytes = enc.GetBytes(builder.ToString());
+		}
+		public void ResponseTradingFailCard()
+		{
+			StringBuilder builder = new StringBuilder();
+			builder.AppendFormat("HTTP/1.1 404 Not Found\n");
+			builder.AppendLine("Content-Type: application/json");
+			builder.AppendLine("");
+			builder.AppendLine("The Card you want to Trade is not in your possesion.");
+			builder.AppendLine("");
+
+			Console.WriteLine("");
+			Console.WriteLine("responce:");
+			Console.WriteLine(builder.ToString());
+			responseMsg = builder.ToString();
+			sendBytes = enc.GetBytes(builder.ToString());
+		}
+		public void ResponseTradingIdFail()
+		{
+			StringBuilder builder = new StringBuilder();
+			builder.AppendFormat("HTTP/1.1 404 Not Found\n");
+			builder.AppendLine("Content-Type: application/json");
+			builder.AppendLine("");
+			builder.AppendLine("Creating Trading failed - The Id is already in use.");
+			builder.AppendLine("");
+
+			Console.WriteLine("");
+			Console.WriteLine("responce:");
+			Console.WriteLine(builder.ToString());
+			responseMsg = builder.ToString();
+			sendBytes = enc.GetBytes(builder.ToString());
+		}
 		public void ResponsePackages()
 		{
 			StringBuilder builder = new StringBuilder();
@@ -516,6 +561,21 @@ namespace REST_BRZAKALA_core
 			builder.AppendLine("Content-Type: application/json");
 			builder.AppendLine("");
 			builder.AppendLine(json);
+
+			Console.WriteLine("");
+			Console.WriteLine("responce:");
+			Console.WriteLine(builder.ToString());
+			responseMsg = builder.ToString();
+
+			sendBytes = enc.GetBytes(builder.ToString());
+		}
+		public void ResponsePostCardTrade()
+		{
+			StringBuilder builder = new StringBuilder();
+			builder.AppendLine("HTTP/1.1 200 OK");
+			builder.AppendLine("Content-Type: application/json");
+			builder.AppendLine("");
+			builder.AppendFormat("One Card succesfull added to the Trading Store.");
 
 			Console.WriteLine("");
 			Console.WriteLine("responce:");
