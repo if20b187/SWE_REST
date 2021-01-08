@@ -262,7 +262,24 @@ namespace REST_BRZAKALA_core
 
             return output;
         }
+        public string GetTrading()
+        {
+            using var con = new NpgsqlConnection(cs);
+            con.Open();
 
+            using var cmd = new NpgsqlCommand("SELECT * FROM tradings", con);
+            using NpgsqlDataReader rdr = cmd.ExecuteReader();
+
+            string output = "";
+
+            while (rdr.Read())
+            {
+                output = output + rdr.GetInt32(0).ToString() + " " + rdr.GetString(1) + " " + rdr.GetInt32(2).ToString() + " " + rdr.GetString(3) + "\n";
+            }
+            con.Close();
+
+            return output;
+        }
 
         //Update deck SET card1 = 'undefined', card2 = 'undefined',.... WHERE username='kienboec'; 
         public void UpdateUserData(string user, string name, string bio, string image)

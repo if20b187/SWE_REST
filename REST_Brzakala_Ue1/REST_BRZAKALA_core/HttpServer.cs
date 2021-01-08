@@ -641,6 +641,50 @@ namespace REST_BRZAKALA_core
                 stream.Write(res.sendBytes, 0, res.sendBytes.Length);
                 rs.RequestBody.Clear();
             }
+            // SHOW TRADING - ROUTE: /tradings
+            // FÜR POST DANN:
+            // dbc - FullCardInfo - gibt die ganze Karte aus von einer id
+            // dbc methode show the 4 ids from the card from the deck (wahrscheinlich methode die das trennen muss -> 11,Dragon,46,fire,monster -> split(",")[0]
+            else if (String.Compare(rs.Method, "GET") == 0 && String.Compare(rs.Url, "/tradings") == 0 && rs.RequestBody.ContainsKey("Authorization"))
+            {
+                if (String.Compare(rs.RequestBody["Authorization"], dbc.CheckToken(rs.RequestBody["Authorization"])) == 0)
+                {
+                    List<Trading> tradingDeals = new List<Trading>();
+                    string trading = dbc.GetTrading();
+                    Console.WriteLine(trading);
+
+                    //read line by line
+                    using (StringReader reader = new StringReader(trading))
+                    {
+                        string line;        //line
+                        while ((line = reader.ReadLine()) != null)
+                        {
+                            if (string.IsNullOrEmpty(line))
+                            {
+                                break;
+                            }
+                            if (line.Contains(' '))
+                            {
+                                int c1 = Int32.Parse(line.Split(' ')[0]);
+                                string c2 = line.Split(' ')[1];
+                                int c3 = Int32.Parse(line.Split(' ')[2]);
+                                string c4 = line.Split(' ')[3];
+                                tradingDeals.Add(new Trading(c1, c2, c3, c4));
+                            }
+                        }
+                    }
+                    string json = JsonConvert.SerializeObject(tradingDeals);
+
+                    res.ResponseGetDeck(json);
+                }
+                else
+                {
+                    // Selbe Fehlermeldung - "Failed - do you provide your authorization?"
+                    res.ResponseUpdateUserDataFail();
+                }
+                stream.Write(res.sendBytes, 0, res.sendBytes.Length);
+                rs.RequestBody.Clear();
+            }
             //FALSE ROUTE
             else
             {
