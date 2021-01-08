@@ -340,6 +340,21 @@ namespace REST_BRZAKALA_core
 
 			sendBytes = enc.GetBytes(builder.ToString());
 		}
+		public void ResponseGetDeckPlain(string json)
+		{
+			StringBuilder builder = new StringBuilder();
+			builder.AppendLine("HTTP/1.1 200 OK");
+			builder.AppendLine("Content-Type: text/plain");
+			builder.AppendLine("");
+			builder.AppendLine(json);
+
+			Console.WriteLine("");
+			Console.WriteLine("responce:");
+			Console.WriteLine(builder.ToString());
+			responseMsg = builder.ToString();
+
+			sendBytes = enc.GetBytes(builder.ToString());
+		}
 
 		public void ResponseDeckFail()
 		{

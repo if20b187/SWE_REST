@@ -367,33 +367,28 @@ namespace REST_BRZAKALA_core
 
                 if (String.Compare(rs.RequestBody["Authorization"], dbc.CheckToken(rs.RequestBody["Authorization"])) == 0)
                 {
-                    List<string> deckCards = new List<string>();
+                    List<Card> deckCards = new List<Card>();
                     string deck  = dbc.GetUserDeck(dbc.TokenToUser(rs.RequestBody["Authorization"]));
                     Console.WriteLine(deck);
 
-                    
                     //read line by line
                     using (StringReader reader = new StringReader(deck))
                     {
                         string line;        //line
                         while ((line = reader.ReadLine()) != null)
                         {
-                            //Console.WriteLine(line); // Request line by line ausgeben.
-
                             if (string.IsNullOrEmpty(line))
                             {
                                 break;
                             }
-                            if (line.Contains(' '))
+                            if (line.Contains(','))
                             {
-                                string c1 = line.Split(' ')[1];
-                                string c2 = line.Split(' ')[3];
-                                string c3 = line.Split(' ')[5];
-                                string c4 = line.Split(' ')[7];
-                                deckCards.Add(c1);
-                                deckCards.Add(c2);
-                                deckCards.Add(c3);
-                                deckCards.Add(c4);
+                                int id = Int32.Parse(line.Split(',')[0]);
+                                string name = line.Split(',')[1];
+                                int damage = Int32.Parse(line.Split(',')[2]);
+                                string element = line.Split(',')[3];
+                                string type = line.Split(',')[4];
+                                deckCards.Add(new Card(id,name,damage,element,type));
                             }
                         }
                     }  
@@ -416,33 +411,32 @@ namespace REST_BRZAKALA_core
                 {
                     string output = "";
                     string deck = dbc.GetUserDeck(dbc.TokenToUser(rs.RequestBody["Authorization"]));
-                    Console.WriteLine(deck);
-
-
+                    int zahl = 1;
+                    //Console.WriteLine(deck);
                     //read line by line
                     using (StringReader reader = new StringReader(deck))
                     {
                         string line;        //line
                         while ((line = reader.ReadLine()) != null)
                         {
-                            //Console.WriteLine(line); // Request line by line ausgeben.
-
                             if (string.IsNullOrEmpty(line))
                             {
                                 break;
                             }
-                            if (line.Contains(' '))
+                            if (line.Contains(','))
                             {
-                                string c1 = line.Split(' ')[1];
-                                string c2 = line.Split(' ')[3];
-                                string c3 = line.Split(' ')[5];
-                                string c4 = line.Split(' ')[7];
-                                output = "Card1: " + c1 + "\nCard2: " + c2 + "\nCard3: " + c3 + "\nCard4: " + c4;
+                                int id = Int32.Parse(line.Split(',')[0]);
+                                string name = line.Split(',')[1];
+                                int damage = Int32.Parse(line.Split(',')[2]);
+                                string element = line.Split(',')[3];
+                                string type = line.Split(',')[4];
+                                output = output + zahl + " - id: " + id + " name: " + name + " damage: " + damage + " element: " + element + " type: " + type + "\n";
+                                zahl++;
                             }
                         }
                     }
-                    string info = "Card | id | name | damage | element | type\n";
-                    res.ResponseGetDeck(info + output);
+                    //string info = "Card | id | name | damage | element | type\n";
+                    res.ResponseGetDeckPlain(output);
                 }
                 else
                 {
@@ -513,28 +507,36 @@ namespace REST_BRZAKALA_core
                 rs.RequestBody.Clear();
             }
             // SHOW USERDATA - ROUTE: /users/<username>
-            else if (String.Compare(rs.Method, "GET") == 0 && String.Compare(rs.Url, "/users/" + dbc.TokenToUser(rs.RequestBody["Authorization"])) == 0 && rs.RequestBody.ContainsKey("Authorization"))
+            else if (String.Compare(rs.Method, "GET") == 0 && userdatahelp() == true && rs.RequestBody.ContainsKey("Authorization"))
             {
-                if (String.Compare(rs.RequestBody["Authorization"], dbc.CheckToken(rs.RequestBody["Authorization"])) == 0)
+                if (String.Compare(rs.Url, "/users/" + dbc.TokenToUser(rs.RequestBody["Authorization"])) == 0)
                 {
-                    List<UserData> lud = new List<UserData>();
-                    string data = dbc.GetUserData(dbc.TokenToUser(rs.RequestBody["Authorization"]));
+                    if (String.Compare(rs.RequestBody["Authorization"], dbc.CheckToken(rs.RequestBody["Authorization"])) == 0)
+                    {
+                        List<UserData> lud = new List<UserData>();
+                        string data = dbc.GetUserData(dbc.TokenToUser(rs.RequestBody["Authorization"]));
 
-                    using var reader = new StringReader(data);
-                    string s1 = reader.ReadLine();
-                    string s2 = reader.ReadLine();
-                    string s3 = reader.ReadLine();
-                    Console.WriteLine(s1, s2, s3);
-                    UserData ud = new UserData(s1, s2, s3);
- 
-                    string json = JsonConvert.SerializeObject(ud);
-                    
-                    res.ResponseGetUserData(json);
+                        using var reader = new StringReader(data);
+                        string s1 = reader.ReadLine();
+                        string s2 = reader.ReadLine();
+                        string s3 = reader.ReadLine();
+                        Console.WriteLine(s1, s2, s3);
+                        UserData ud = new UserData(s1, s2, s3);
+
+                        string json = JsonConvert.SerializeObject(ud);
+
+                        res.ResponseGetUserData(json);
+                    }
+                    else
+                    {
+                        res.ResponseUserDataFail();
+                    }
                 }
                 else
                 {
                     res.ResponseUserDataFail();
                 }
+                
                 stream.Write(res.sendBytes, 0, res.sendBytes.Length);
                 rs.RequestBody.Clear();
             }
@@ -650,6 +652,25 @@ namespace REST_BRZAKALA_core
             stream.Close();
             client.Close();
 
+        }
+        public Boolean userdatahelp()
+        {
+            try
+            {
+                if (String.Compare(rs.Url, "/users/" + dbc.TokenToUser(rs.RequestBody["Authorization"])) == 0)
+                {
+                    return true;
+                }
+                else
+                {
+                    return false;
+                }
+            }
+            catch (Exception e)
+            {
+                return false;
+            }
+            
         }
         public Boolean SameCards(int a, int b, int c, int d)
         {

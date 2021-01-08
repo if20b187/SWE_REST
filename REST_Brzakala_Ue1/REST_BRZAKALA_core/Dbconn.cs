@@ -179,7 +179,7 @@ namespace REST_BRZAKALA_core
             while (rdr.Read())
             {
                 // = output ist hier unnötig.
-                output = output + "card1: " +rdr.GetString(0) + " card2: " + rdr.GetString(1) + " card3: " + rdr.GetString(2) + " card4: " + rdr.GetString(3) + "\n";
+                output = output + rdr.GetString(0) + "\n" + rdr.GetString(1) + "\n" + rdr.GetString(2) + "\n" + rdr.GetString(3) + "\n";
             }
             con.Close();
 
