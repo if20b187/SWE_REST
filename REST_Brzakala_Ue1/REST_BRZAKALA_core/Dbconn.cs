@@ -692,6 +692,25 @@ namespace REST_BRZAKALA_core
             con.Close();
             return output;
         }
+        public string CheckTradingAnforderungenId(int id)
+        {
+            using var con = new NpgsqlConnection(cs);
+            con.Open();
+
+            using var cmd = new NpgsqlCommand("SELECT mindamage,type FROM tradings where tradingid=@id", con);
+            cmd.Parameters.AddWithValue("id", id);
+            using NpgsqlDataReader rdr = cmd.ExecuteReader();
+
+            string output = "";
+
+            while (rdr.Read())
+            {
+                //Console.WriteLine("{0}", rdr.GetString(0));
+                output = rdr.GetInt32(0).ToString() + " " + rdr.GetString(1);
+            }
+            con.Close();
+            return output;
+        }
         public string FullCardInfo(int id)
         {
             using var con = new NpgsqlConnection(cs);

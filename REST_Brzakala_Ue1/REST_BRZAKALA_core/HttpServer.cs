@@ -790,6 +790,78 @@ namespace REST_BRZAKALA_core
                 stream.Write(res.sendBytes, 0, res.sendBytes.Length);
                 rs.RequestBody.Clear();
             }
+            // POST Try to Trade - ROUTE: /tradings/<id>
+            else if (String.Compare(rs.Method, "POST") == 0 && String.Compare(rs.Url, "/tradings/" + urllast) == 0 && rs.RequestBody.ContainsKey("Authorization"))
+            {
+                /*      Gecheckt werden soll:
+                 *      Username vom tradingid darf nicht der username von der Authorization sein.                                OK
+                 *      Folgende Werte holen: mindamage & typ von tradingid
+                 *      
+                 *      dbc.AddUsercards - dem user von der tradingid die neue karte die im Contentstr is ( und er sie auch hat)
+                 *      dbc.Add Usercard - user von authorization die cardid vom tradingid
+                 */
+
+                string username = dbc.TokenToUser(rs.RequestBody["Authorization"]);
+                int eintauschCard = Int32.Parse(rs.ContentStr);
+                int tradingCard = dbc.GetCardFromTradingID(Int32.Parse(urllast));
+                Console.WriteLine("hascard: {0}, cardidfull: {1}", eintauschCard, tradingCard);
+                try {
+                    if (String.Compare(rs.RequestBody["Authorization"], dbc.CheckToken(rs.RequestBody["Authorization"])) == 0 && !String.Equals(username, dbc.CheckTradingUsernameId(Int32.Parse(urllast)))  && dbc.CheckUserHasCard(username, eintauschCard, eintauschCard))
+                    {
+                        try
+                        {
+                            //bekomme die Mindestanforderung:
+
+                            //TRADE CARD:
+                            string anforderungen = dbc.CheckTradingAnforderungenId(Int32.Parse(urllast));
+                            int cmind = Int32.Parse(anforderungen.Split(' ')[0]);
+                            string ctype = anforderungen.Split(' ')[1];
+
+                            //CARD DIE DER USER EINTAUSCHT:
+                            string eintausch = dbc.FullCardInfo(eintauschCard);
+                            int einmind = Int32.Parse(eintausch.Split(' ')[2]);
+                            string eintype = eintausch.Split(' ')[4];
+
+                            // Ist die Eintausch Karte auch von dem Typ der Gefragt ist?
+                            // Ist min damage größer gleich der Anforderung?
+                            // -> Wenn Ja - Tausch durchführen.
+                            if (String.Compare(ctype, eintype) == 0 && cmind <= einmind)
+                            {
+                                // Trade Card User - bekommt die neue Karte - EinsatzKarte wird gelöscht aus trading.
+                                string cardInfo1 = dbc.FullCardInfo(tradingCard);  
+                                int cid1 = Int32.Parse(cardInfo1.Split(' ')[0]); string cname1 = cardInfo1.Split(' ')[1]; int cdamage1 = Int32.Parse(cardInfo1.Split(' ')[2]); string celement1 = cardInfo1.Split(' ')[3]; string ctype1 = cardInfo1.Split(' ')[4];
+                                dbc.AddUserCard(username, cid1,cname1,cdamage1,celement1,ctype1);
+
+                                // Eintausch User - seine Karte wird ihm gelöscht - bekommt die Karte mit der Id vom Trading.
+                                dbc.TradingDeleteUserCard(username, eintauschCard);
+                                string cardInfo2 = dbc.FullCardInfo(eintauschCard);
+                                int cid2 = Int32.Parse(cardInfo2.Split(' ')[0]); string cname2 = cardInfo2.Split(' ')[1]; int cdamage2 = Int32.Parse(cardInfo2.Split(' ')[2]); string celement2 = cardInfo2.Split(' ')[3]; string ctype2 = cardInfo2.Split(' ')[4];
+                                dbc.AddUserCard(dbc.CheckTradingUsernameId(Int32.Parse(urllast)), cid2, cname2, cdamage2, celement2, ctype2);
+                                dbc.DeleteTrading(Int32.Parse(urllast));
+                                res.ResponseTrading();
+                            }
+                            else
+                            {
+                                res.ResponseTradingfehler();
+                            }
+                        }
+                        catch (Exception e)
+                        {
+                            res.ResponseTradingfehler();
+                        }
+                    }
+                    else
+                    {
+                        // Selbe Fehlermeldung - "Failed - do you provide your authorization?"
+                        res.ResponseUpdateUserDataFail();
+                    }
+                }catch (Exception e)
+                {
+                    res.ResponseUpdateUserDataFail();
+                }
+                stream.Write(res.sendBytes, 0, res.sendBytes.Length);
+                rs.RequestBody.Clear();
+            }
             //FALSE ROUTE
             else
             {

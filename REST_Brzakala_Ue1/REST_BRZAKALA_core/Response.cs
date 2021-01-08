@@ -264,6 +264,21 @@ namespace REST_BRZAKALA_core
 			responseMsg = builder.ToString();
 			sendBytes = enc.GetBytes(builder.ToString());
 		}
+		public void ResponseTradingfehler()
+		{
+			StringBuilder builder = new StringBuilder();
+			builder.AppendFormat("HTTP/1.1 404 Not Found\n");
+			builder.AppendLine("Content-Type: application/json");
+			builder.AppendLine("");
+			builder.AppendLine("Trading failed.");
+			builder.AppendLine("");
+
+			Console.WriteLine("");
+			Console.WriteLine("responce:");
+			Console.WriteLine(builder.ToString());
+			responseMsg = builder.ToString();
+			sendBytes = enc.GetBytes(builder.ToString());
+		}
 		public void ResponseTradingFailCard()
 		{
 			StringBuilder builder = new StringBuilder();
@@ -606,6 +621,21 @@ namespace REST_BRZAKALA_core
 			builder.AppendLine("Content-Type: application/json");
 			builder.AppendLine("");
 			builder.AppendFormat("One Card deleted from Trading Store.");
+
+			Console.WriteLine("");
+			Console.WriteLine("responce:");
+			Console.WriteLine(builder.ToString());
+			responseMsg = builder.ToString();
+
+			sendBytes = enc.GetBytes(builder.ToString());
+		}
+		public void ResponseTrading()
+		{
+			StringBuilder builder = new StringBuilder();
+			builder.AppendLine("HTTP/1.1 200 OK");
+			builder.AppendLine("Content-Type: application/json");
+			builder.AppendLine("");
+			builder.AppendFormat("Trading Succesfull. One Card added to your Cards.");
 
 			Console.WriteLine("");
 			Console.WriteLine("responce:");
