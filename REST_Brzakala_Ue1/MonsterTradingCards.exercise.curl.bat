@@ -41,11 +41,11 @@ echo.
 
 REM --------------------------------------------------
 echo 3.1) create card (done by "admin")
-curl -X POST http://localhost:8080/card --header "Content-Type: application/json" --header "Authorization: Basic admin-mtcgToken" -d "{\"id\": 1, \"name\": \"WaterGoblin\", \"damage\": 37, \"element\": \"water\", \"type\": \"spell\"}"
+curl -X POST http://localhost:8080/card --header "Content-Type: application/json" --header "Authorization: Basic admin-mtcgToken" -d "{\"id\": 1, \"name\": \"Goblin\", \"damage\": 37, \"element\": \"water\", \"type\": \"spell\"}"
 echo.																																																																																 				    
 curl -X POST http://localhost:8080/card --header "Content-Type: application/json" --header "Authorization: Basic admin-mtcgToken" -d "{\"id\": 2, \"name\": \"Dragon\", \"damage\": 42, \"element\": \"fire\", \"type\": \"monster\"}"
 echo.																																																																																 				    
-curl -X POST http://localhost:8080/card --header "Content-Type: application/json" --header "Authorization: Basic admin-mtcgToken" -d "{\"id\": 3, \"name\": \"WaterSpell\", \"damage\": 11, \"element\": \"water\", \"type\": \"spell\"}"
+curl -X POST http://localhost:8080/card --header "Content-Type: application/json" --header "Authorization: Basic admin-mtcgToken" -d "{\"id\": 3, \"name\": \"Spell\", \"damage\": 11, \"element\": \"water\", \"type\": \"spell\"}"
 echo.																																																																															 				    
 curl -X POST http://localhost:8080/card --header "Content-Type: application/json" --header "Authorization: Basic admin-mtcgToken" -d "{\"id\": 4, \"name\": \"Ork\", \"damage\": 39, \"element\": \"water\", \"type\": \"monster\"}"
 echo.
@@ -55,15 +55,15 @@ curl -X POST http://localhost:8080/card --header "Content-Type: application/json
 echo.
 curl -X POST http://localhost:8080/card --header "Content-Type: application/json" --header "Authorization: Basic admin-mtcgToken" -d "{\"id\": 7, \"name\": \"Kraken\", \"damage\": 43, \"element\": \"water\", \"type\": \"monster\"}"
 echo.
-curl -X POST http://localhost:8080/card --header "Content-Type: application/json" --header "Authorization: Basic admin-mtcgToken" -d "{\"id\": 8, \"name\": \"FireElves\", \"damage\": 29, \"element\": \"fire\", \"type\": \"monster\"}"
+curl -X POST http://localhost:8080/card --header "Content-Type: application/json" --header "Authorization: Basic admin-mtcgToken" -d "{\"id\": 8, \"name\": \"Elves\", \"damage\": 29, \"element\": \"fire\", \"type\": \"monster\"}"
 echo.
-curl -X POST http://localhost:8080/card --header "Content-Type: application/json" --header "Authorization: Basic admin-mtcgToken" -d "{\"id\": 9, \"name\": \"FireTroll\", \"damage\": 38, \"element\": \"fire\", \"type\": \"monster\"}"
+curl -X POST http://localhost:8080/card --header "Content-Type: application/json" --header "Authorization: Basic admin-mtcgToken" -d "{\"id\": 9, \"name\": \"Troll\", \"damage\": 38, \"element\": \"fire\", \"type\": \"monster\"}"
 echo.
 curl -X POST http://localhost:8080/card --header "Content-Type: application/json" --header "Authorization: Basic admin-mtcgToken" -d "{\"id\": 10, \"name\": \"WaterGoblin\", \"damage\": 33, \"element\": \"water\", \"type\": \"spell\"}"
 echo.
 curl -X POST http://localhost:8080/card --header "Content-Type: application/json" --header "Authorization: Basic admin-mtcgToken" -d "{\"id\": 11, \"name\": \"Dragon\", \"damage\": 46, \"element\": \"fire\", \"type\": \"monster\"}"
 echo.
-curl -X POST http://localhost:8080/card --header "Content-Type: application/json" --header "Authorization: Basic admin-mtcgToken" -d "{\"id\": 12, \"name\": \"FireSpell\", \"damage\": 44, \"element\": \"fire\", \"type\": \"spell\"}"
+curl -X POST http://localhost:8080/card --header "Content-Type: application/json" --header "Authorization: Basic admin-mtcgToken" -d "{\"id\": 12, \"name\": \"Spell\", \"damage\": 44, \"element\": \"fire\", \"type\": \"spell\"}"
 echo.
 curl -X POST http://localhost:8080/card --header "Content-Type: application/json" --header "Authorization: Basic admin-mtcgToken" -d "{\"id\": 13, \"name\": \"Ork\", \"damage\": 46, \"element\": \"water\", \"type\": \"spell\"}"
 echo.
@@ -73,13 +73,13 @@ curl -X POST http://localhost:8080/card --header "Content-Type: application/json
 echo.
 curl -X POST http://localhost:8080/card --header "Content-Type: application/json" --header "Authorization: Basic admin-mtcgToken" -d "{\"id\": 16, \"name\": \"Kraken\", \"damage\": 12, \"element\": \"water\", \"type\": \"spell\"}"
 echo.
-curl -X POST http://localhost:8080/card --header "Content-Type: application/json" --header "Authorization: Basic admin-mtcgToken" -d "{\"id\": 17, \"name\": \"FireElves\", \"damage\": 14, \"element\": \"fire\", \"type\": \"monster\"}"
+curl -X POST http://localhost:8080/card --header "Content-Type: application/json" --header "Authorization: Basic admin-mtcgToken" -d "{\"id\": 17, \"name\": \"Elves\", \"damage\": 14, \"element\": \"fire\", \"type\": \"monster\"}"
 echo.
-curl -X POST http://localhost:8080/card --header "Content-Type: application/json" --header "Authorization: Basic admin-mtcgToken" -d "{\"id\": 18, \"name\": \"FireTroll\", \"damage\": 13, \"element\": \"fire\", \"type\": \"spell\"}"
+curl -X POST http://localhost:8080/card --header "Content-Type: application/json" --header "Authorization: Basic admin-mtcgToken" -d "{\"id\": 18, \"name\": \"Troll\", \"damage\": 13, \"element\": \"fire\", \"type\": \"spell\"}"
 echo.
-curl -X POST http://localhost:8080/card --header "Content-Type: application/json" --header "Authorization: Basic admin-mtcgToken" -d "{\"id\": 19, \"name\": \"WaterTroll\", \"damage\": 18, \"element\": \"water\", \"type\": \"spell\"}"
+curl -X POST http://localhost:8080/card --header "Content-Type: application/json" --header "Authorization: Basic admin-mtcgToken" -d "{\"id\": 19, \"name\": \"Troll\", \"damage\": 18, \"element\": \"water\", \"type\": \"spell\"}"
 echo.
-curl -X POST http://localhost:8080/card --header "Content-Type: application/json" --header "Authorization: Basic admin-mtcgToken" -d "{\"id\": 20, \"name\": \"WaterElves\", \"damage\": 11, \"element\": \"water\", \"type\": \"spell\"}"
+curl -X POST http://localhost:8080/card --header "Content-Type: application/json" --header "Authorization: Basic admin-mtcgToken" -d "{\"id\": 20, \"name\": \"Elves\", \"damage\": 11, \"element\": \"water\", \"type\": \"spell\"}"
 
 
 
@@ -179,11 +179,11 @@ echo.
 
 REM --------------------------------------------------
 echo 11) configure deck
-curl -X PUT http://localhost:8080/deck --header "Content-Type: application/json" --header "Authorization: Basic kienboec-mtcgToken" -d "[\"4\", \"5\", \"6\", \"17\"]"
+curl -X PUT http://localhost:8080/deck --header "Content-Type: application/json" --header "Authorization: Basic kienboec-mtcgToken" -d "[\"18\", \4\", \"11\", \"10\"]"
 echo.
 curl -X GET http://localhost:8080/deck --header "Authorization: Basic kienboec-mtcgToken"
 echo.
-curl -X PUT http://localhost:8080/deck --header "Content-Type: application/json" --header "Authorization: Basic altenhof-mtcgToken" -d "[\"8\", \"9\", \"2\", \"4\"]"
+curl -X PUT http://localhost:8080/deck --header "Content-Type: application/json" --header "Authorization: Basic altenhof-mtcgToken" -d "[\"12\", \"14\", \"9\", \"10\"]"
 echo.
 curl -X GET http://localhost:8080/deck --header "Authorization: Basic altenhof-mtcgToken"
 echo.
@@ -269,6 +269,9 @@ REM --------------------------------------------------
 echo 17) battle
 start /b "kienboec battle" curl -X POST http://localhost:8080/battles --header "Authorization: Basic kienboec-mtcgToken"
 start /b "altenhof battle" curl -X POST http://localhost:8080/battles --header "Authorization: Basic altenhof-mtcgToken"
+
+curl -X GET http://localhost:8080/battle -d "kienboec,altenhof"
+
 ping localhost -n 10 >NUL 2>NUL
 
 REM --------------------------------------------------
@@ -309,18 +312,17 @@ REM --------------------------------------------------
 echo 21) check trading deals
 curl -X GET http://localhost:8080/tradings  --header "Authorization: Basic kienboec-mtcgToken"
 echo.
-curl -X POST http://localhost:8080/tradings --header "Content-Type: application/json" --header "Authorization: Basic kienboec-mtcgToken" -d "{\"Id\": \"6cd85277-4590-49d4-b0cf-ba0a921faad0\", \"CardToTrade\": \"1cb6ab86-bdb2-47e5-b6e4-68c5ab389334\", \"Type\": \"monster\", \"MinimumDamage\": 15}"
-echo check trading deals
+curl -X POST http://localhost:8080/tradings --header "Content-Type: application/json" --header "Authorization: Basic kienboec-mtcgToken" -d "{\"Tradingid\": \"1\", \"Karte\": \"15\", \"MinDamage\": \"10\", \"Type\": \"spell\"}"
 curl -X GET http://localhost:8080/tradings  --header "Authorization: Basic kienboec-mtcgToken"
 echo.
 curl -X GET http://localhost:8080/tradings  --header "Authorization: Basic altenhof-mtcgToken"
 echo.
 echo try to trade with yourself (should fail)
-curl -X POST http://localhost:8080/tradings/1 --header "Content-Type: application/json" --header "Authorization: Basic kienboec-mtcgToken" -d "7"
+curl -X POST http://localhost:8080/tradings/1 --header "Content-Type: application/json" --header "Authorization: Basic kienboec-mtcgToken" -d "3"
 echo.
 echo try to trade 
 echo.
-curl -X POST http://localhost:8080/tradings/1 --header "Content-Type: application/json" --header "Authorization: Basic altenhof-mtcgToken" -d ""
+curl -X POST http://localhost:8080/tradings/1 --header "Content-Type: application/json" --header "Authorization: Basic altenhof-mtcgToken" -d "19"
 echo.
 curl -X GET http://localhost:8080/tradings --header "Authorization: Basic kienboec-mtcgToken"
 echo.

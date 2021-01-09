@@ -19,6 +19,7 @@ namespace REST_BRZAKALA_core
         Response res = new Response();
         Dbconn dbc = new Dbconn();
         Packages pack = new Packages();
+        Battle battle = new Battle();
         public int packid = 0;
 
 
@@ -366,7 +367,6 @@ namespace REST_BRZAKALA_core
             // SHOW USER DECK - ROUTE: /deck
             else if (String.Compare(rs.Method, "GET") == 0 && String.Compare(rs.Url, "/deck") == 0 && rs.RequestBody.ContainsKey("Authorization"))
             {
-
                 if (String.Compare(rs.RequestBody["Authorization"], dbc.CheckToken(rs.RequestBody["Authorization"])) == 0)
                 {
                     List<Card> deckCards = new List<Card>();
@@ -474,7 +474,6 @@ namespace REST_BRZAKALA_core
                         }
                         else if (dbc.CheckUserHasCard(username, c1, c1) && dbc.CheckUserHasCard(username, c2, c2) && dbc.CheckUserHasCard(username, c3, c3) && dbc.CheckUserHasCard(username, c4, c4))
                         {
-                            Console.WriteLine("Nice, Alle Karten vorhanden");
                             string s1 = dbc.FullCardInfo(c1);
                             string s2 = dbc.FullCardInfo(c2);
                             string s3 = dbc.FullCardInfo(c3);
@@ -695,7 +694,7 @@ namespace REST_BRZAKALA_core
                  *      Contentstr beim post: "{\"Tradingid\": \"1\", \"Karte\": \"14\", \"MinDamage\": \"1\", \"Type\": \"monster\"}"
                  *      CheckUserhasCard() - Checkt ob user die karte 12 zb hat.
                  *      Ob er überhaupt die 14 id hat - ja -> Ihm sie löschen von usercards und die 14id  
-                 * 
+                 *      
                  */
                 string username = dbc.TokenToUser(rs.RequestBody["Authorization"]);
 
@@ -859,6 +858,36 @@ namespace REST_BRZAKALA_core
                 {
                     res.ResponseUpdateUserDataFail();
                 }
+                stream.Write(res.sendBytes, 0, res.sendBytes.Length);
+                rs.RequestBody.Clear();
+            }
+            // BATTLE TEST - Wird zu BATTLE LIST ANMELDEN
+            /* WICHTIG: HIER CHECK OB SEIN DECK AKTUELL IST!
+             * Einfach überprüfen ob die Ids der im deck hat noch in seinen Usercards verfügbar sind.
+             * Wenn nicht -> RESPONSE "Bitte Deck aktualisieren - Deck ist nicht Up2date".
+             */
+            else if (String.Compare(rs.Method, "GET") == 0 && String.Compare(rs.Url, "/battle") == 0)
+            {
+                string fighters = rs.ContentStr;
+                string f1 = fighters.Split(",")[0];
+                string f2 = fighters.Split(",")[1];
+                res.ResponseBattle();
+                battle.FillDeckFigther(f1, battle.Fighter1);
+                battle.FillDeckFigther(f2, battle.Fighter2);
+                for(int i=0; i < 4; i++)
+                {
+                    //SetWinner(string username1, string username2, string name1, string typ1, string ele1, int dam1, string name2, string typ2, string ele2, int dam2)
+                    string x = battle.SetWinner(f1, f2, battle.Fighter1[i].name, battle.Fighter1[i].type, battle.Fighter1[i].element, battle.Fighter1[i].damage, battle.Fighter2[i].name, battle.Fighter2[i].type, battle.Fighter2[i].element, battle.Fighter2[i].damage);
+                    Console.WriteLine(x);
+                }
+                
+                /*
+                Console.WriteLine("-----------------------------");
+                Console.WriteLine("First Value from List item 1");
+                Console.WriteLine(battle.Fighter1[0].id);
+                Console.WriteLine("-----------------------------");
+                */
+
                 stream.Write(res.sendBytes, 0, res.sendBytes.Length);
                 rs.RequestBody.Clear();
             }

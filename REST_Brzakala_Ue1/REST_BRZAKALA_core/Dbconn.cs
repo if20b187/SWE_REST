@@ -4,6 +4,7 @@ using System.Collections;
 using System.Text;
 using Npgsql;
 using System.Linq;
+using System.IO;
 
 namespace REST_BRZAKALA_core
 {
@@ -225,6 +226,22 @@ namespace REST_BRZAKALA_core
             return output;
         }
 
+        public string DeckCardIds(string user)
+        {
+            string output = GetUserDeck(user);
+            using var reader = new StringReader(output);
+            string s1 = reader.ReadLine();
+            string s2 = reader.ReadLine();
+            string s3 = reader.ReadLine();
+            string s4 = reader.ReadLine();
+            int id1 = Int32.Parse(s1.Split(',')[0]);
+            int id2 = Int32.Parse(s2.Split(',')[0]);
+            int id3 = Int32.Parse(s3.Split(',')[0]);
+            int id4 = Int32.Parse(s4.Split(',')[0]);
+
+            return id1 + " " + id2 + " " + id3 + " " + id4;
+
+        }
 
         //Update deck SET card1 = 'undefined', card2 = 'undefined',.... WHERE username='kienboec'; 
         public void UpdateDeck(string user, string card1, string card2, string card3, string card4)
