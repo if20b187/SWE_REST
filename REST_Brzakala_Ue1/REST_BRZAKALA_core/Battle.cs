@@ -32,46 +32,57 @@ namespace REST_BRZAKALA_core
         {
             if (name1 == "Goblin" && name2 == "Dragon")
             {
+                Console.WriteLine("Dragon Wins");
                 return username2;
             }
             else if (name1 == "Dragon" && name2 == "Goblin")
             {
+                Console.WriteLine("Dragon Wins");
                 return username1;
             }
             else if (name1 == "Wizzard" && name2 == "Ork")
             {
+                Console.WriteLine("Wizzard Wins");
                 return username1;
             }
             else if (name1 == "Ork" && name2 == "Wizzard")
             {
+                Console.WriteLine("Wizzard Wins");
                 return username2;
             }
             else if (name1 == "Knight" && name2 == "Wizzard")
             {
+                Console.WriteLine("Wizzard Wins");
                 return username2;
             }
             else if (name1 == "Knight" && typ2 == "spell" && ele2 =="water")
             {
+                Console.WriteLine("Spell & Water Wins");
                 return username2;
             }
             else if (name2 == "Knight" && typ1 == "spell" && ele1 == "water")
             {
+                Console.WriteLine("Spell & Water Wins");
                 return username1;
             }
             else if (name1 == "Kraken" && typ2 == "spell")
             {
+                Console.WriteLine("Kraken Wins");
                 return username1;
             }
             else if (typ1 == "spell" && name2 == "Kraken")
             {
+                Console.WriteLine("Kraken Wins");
                 return username2;
             }
             else if (name1 == "Elves" && ele1 == "fire" && name2 == "Dragon")
             {
+                Console.WriteLine("Elves (fire) Wins");
                 return username1;
             }
             else if (name1 == "Dragon" && name2 == "Elves" && ele2 == "fire")
             {
+                Console.WriteLine("Dragon Wins");
                 return username1;
             }
             //Console.WriteLine("Orginaler Wert: damage player1:{0}, damage player2:{1}", dam1, dam2);
@@ -80,7 +91,12 @@ namespace REST_BRZAKALA_core
             {
                 dam1 = dam1 * 2;
                 dam2 = dam2 / 2;
-                if(dam1 > dam2)
+                Console.WriteLine("Dam1 is {0}, Dam2 is {1}",dam1,dam2);
+                if(dam1 == dam2)
+                {
+                    return "draw";
+                }
+                else if (dam1 > dam2)
                 {
                     return username1;
                 }
@@ -93,7 +109,12 @@ namespace REST_BRZAKALA_core
             {
                 dam1 = dam1 / 2;
                 dam2 = dam2 * 2;
-                if (dam1 > dam2)
+                Console.WriteLine("Dam1 is {0}, Dam2 is {1}", dam1, dam2);
+                if (dam1 == dam2)
+                {
+                    return "draw";
+                }
+                else if (dam1 > dam2)
                 {
                     return username1;
                 }
@@ -104,7 +125,12 @@ namespace REST_BRZAKALA_core
             }
             else if (typ1 == "spell" && ele1 == "fire" && typ2 == "spell" && ele2 == "fire")
             {
-                if (dam1 > dam2)
+                Console.WriteLine("Dam1 is {0}, Dam2 is {1}", dam1, dam2);
+                if (dam1 == dam2)
+                {
+                    return "draw";
+                }
+                else if (dam1 > dam2)
                 {
                     return username1;
                 }
@@ -115,7 +141,12 @@ namespace REST_BRZAKALA_core
             }
             else if (typ1 == "spell" && ele1 == "water" && typ2 == "spell" && ele2 == "water")
             {
-                if (dam1 > dam2)
+                Console.WriteLine("Dam1 is {0}, Dam2 is {1}", dam1, dam2);
+                if (dam1 == dam2)
+                {
+                    return "draw";
+                }
+                else if (dam1 > dam2)
                 {
                     return username1;
                 }
@@ -128,7 +159,12 @@ namespace REST_BRZAKALA_core
             {
                 dam1 = dam1 * 2;
                 dam2 = dam2 / 2;
-                if (dam1 > dam2)
+                Console.WriteLine("Dam1 is {0}, Dam2 is {1}", dam1, dam2);
+                if (dam1 == dam2)
+                {
+                    return "draw";
+                }
+                else if (dam1 > dam2)
                 {
                     return username1;
                 }
@@ -141,7 +177,12 @@ namespace REST_BRZAKALA_core
             {
                 dam1 = dam1 / 2;
                 dam2 = dam2 * 2;
-                if (dam1 > dam2)
+                Console.WriteLine("Dam1 is {0}, Dam2 is {1}", dam1, dam2);
+                if (dam1 == dam2)
+                {
+                    return "draw";
+                }
+                else if (dam1 > dam2)
                 {
                     return username1;
                 }
@@ -154,7 +195,12 @@ namespace REST_BRZAKALA_core
             {
                 dam1 = dam1 / 2;
                 dam2 = dam2 * 2;
-                if (dam1 > dam2)
+                Console.WriteLine("Dam1 is {0}, Dam2 is {1}", dam1, dam2);
+                if (dam1 == dam2)
+                {
+                    return "draw";
+                }
+                else if (dam1 > dam2)
                 {
                     return username1;
                 }
@@ -167,7 +213,12 @@ namespace REST_BRZAKALA_core
             {
                 dam1 = dam1 * 2;
                 dam2 = dam2 / 2;
-                if (dam1 > dam2)
+                Console.WriteLine("Dam1 is {0}, Dam2 is {1}", dam1, dam2);
+                if (dam1 == dam2)
+                {
+                    return "draw";
+                }
+                else if (dam1 > dam2)
                 {
                     return username1;
                 }
@@ -181,7 +232,12 @@ namespace REST_BRZAKALA_core
             {
                 dam1 = dam1 * 2;
                 dam2 = dam2 / 2;
-                if (dam1 > dam2)
+                Console.WriteLine("Dam1 is {0}, Dam2 is {1}", dam1, dam2);
+                if (dam1 == dam2)
+                {
+                    return "draw";
+                }
+                else if (dam1 > dam2)
                 {
                     return username1;
                 }
@@ -194,7 +250,12 @@ namespace REST_BRZAKALA_core
             {
                 dam2 = dam2 * 2;
                 dam1 = dam1 / 2;
-                if (dam1 > dam2)
+                Console.WriteLine("Dam1 is {0}, Dam2 is {1}", dam1, dam2);
+                if (dam1 == dam2)
+                {
+                    return "draw";
+                }
+                else if (dam1 > dam2)
                 {
                     return username1;
                 }
@@ -205,7 +266,12 @@ namespace REST_BRZAKALA_core
             }
             else if (typ1 == "monster" && ele1 == "fire" && typ2 == "monster" && ele2 == "fire")
             {
-                if (dam1 > dam2)
+                Console.WriteLine("Dam1 is {0}, Dam2 is {1}", dam1, dam2);
+                if (dam1 == dam2)
+                {
+                    return "draw";
+                }
+                else if (dam1 > dam2)
                 {
                     return username1;
                 }
@@ -218,7 +284,12 @@ namespace REST_BRZAKALA_core
             {
                 dam1 = dam1 * 2;
                 dam2 = dam2 / 2;
-                if (dam1 > dam2)
+                Console.WriteLine("Dam1 is {0}, Dam2 is {1}", dam1, dam2);
+                if (dam1 == dam2)
+                {
+                    return "draw";
+                }
+                else if (dam1 > dam2)
                 {
                     return username1;
                 }
@@ -231,7 +302,12 @@ namespace REST_BRZAKALA_core
             {
                 dam1 = dam1 * 2;
                 dam2 = dam2 / 2;
-                if (dam1 > dam2)
+                Console.WriteLine("Dam1 is {0}, Dam2 is {1}", dam1, dam2);
+                if (dam1 == dam2)
+                {
+                    return "draw";
+                }
+                else if (dam1 > dam2)
                 {
                     return username1;
                 }
@@ -243,7 +319,12 @@ namespace REST_BRZAKALA_core
             //Normal
             else if (typ1 == "spell" && ele1 == "normal" && typ2 == "spell" && ele2 == "normal")
             {
-                if (dam1 > dam2)
+                Console.WriteLine("Dam1 is {0}, Dam2 is {1}", dam1, dam2);
+                if (dam1 == dam2)
+                {
+                    return "draw";
+                }
+                else if (dam1 > dam2)
                 {
                     return username1;
                 }
@@ -254,7 +335,12 @@ namespace REST_BRZAKALA_core
             }
             else if (typ1 == "spell" && ele1 == "normal" && typ2 == "monster" && ele2 == "normal")
             {
-                if (dam1 > dam2)
+                Console.WriteLine("Dam1 is {0}, Dam2 is {1}", dam1, dam2);
+                if (dam1 == dam2)
+                {
+                    return "draw";
+                }
+                else if (dam1 > dam2)
                 {
                     return username1;
                 }
@@ -265,7 +351,12 @@ namespace REST_BRZAKALA_core
             }
             else if (typ1 == "monster" && ele1 == "normal" && typ2 == "spell" && ele2 == "normal")
             {
-                if (dam1 > dam2)
+                Console.WriteLine("Dam1 is {0}, Dam2 is {1}", dam1, dam2);
+                if (dam1 == dam2)
+                {
+                    return "draw";
+                }
+                else if (dam1 > dam2)
                 {
                     return username1;
                 }
@@ -276,7 +367,12 @@ namespace REST_BRZAKALA_core
             }
             else if (typ1 == "monster" && ele1 == "normal" && typ2 == "monster" && ele2 == "normal")
             {
-                if (dam1 > dam2)
+                Console.WriteLine("Dam1 is {0}, Dam2 is {1}", dam1, dam2);
+                if (dam1 == dam2)
+                {
+                    return "draw";
+                }
+                else if (dam1 > dam2)
                 {
                     return username1;
                 }
@@ -285,7 +381,6 @@ namespace REST_BRZAKALA_core
                     return username2;
                 }
             }
-            
             else
             {
                 return "FALSCH";
