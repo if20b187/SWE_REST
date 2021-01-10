@@ -659,13 +659,14 @@ namespace REST_BRZAKALA_core
 
 			sendBytes = enc.GetBytes(builder.ToString());
 		}
-		public void ResponseBattle()
+		public void ResponseBattle(int matchid)
 		{
 			StringBuilder builder = new StringBuilder();
 			builder.AppendLine("HTTP/1.1 200 OK");
 			builder.AppendLine("Content-Type: application/json");
 			builder.AppendLine("");
-			builder.AppendFormat("Dein Battle beginnt in Kürze - Matchid: x");
+			builder.AppendFormat("Your Battle starts soon. - Matchid: {0} - ", matchid);
+			builder.AppendLine("Check the Battle under /battle/<matchid>");
 
 			Console.WriteLine("");
 			Console.WriteLine("responce:");

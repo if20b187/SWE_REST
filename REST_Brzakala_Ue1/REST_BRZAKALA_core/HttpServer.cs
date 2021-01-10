@@ -866,8 +866,9 @@ namespace REST_BRZAKALA_core
              * Einfach überprüfen ob die Ids der im deck hat noch in seinen Usercards verfügbar sind.
              * Wenn nicht -> RESPONSE "Bitte Deck aktualisieren - Deck ist nicht Up2date".
              */
-            else if (String.Compare(rs.Method, "POST") == 0 && String.Compare(rs.Url, "/battle") == 0 && rs.RequestBody.ContainsKey("Authorization"))
+            else if (String.Compare(rs.Method, "POST") == 0 && String.Compare(rs.Url, "/battle") == 0 && rs.RequestBody.ContainsKey("Authorization") && dbc.CheckUserExists(dbc.TokenToUser(rs.RequestBody["Authorization"])))
             {
+                
                 string username = dbc.TokenToUser(rs.RequestBody["Authorization"]);
                 string deckid1 = dbc.GetUserDeck(username).Split('\n')[0];
                 string deckid2 = dbc.GetUserDeck(username).Split('\n')[1];
@@ -883,13 +884,16 @@ namespace REST_BRZAKALA_core
 
                 if (String.Compare(rs.RequestBody["Authorization"], dbc.CheckToken(rs.RequestBody["Authorization"])) == 0 && dbc.CheckUserHasCard(username, cardiddeck1, cardiddeck1) && dbc.CheckUserHasCard(username, cardiddeck2, cardiddeck2) && dbc.CheckUserHasCard(username, cardiddeck3, cardiddeck3) && dbc.CheckUserHasCard(username, cardiddeck4, cardiddeck4))
                 {
-                    if(battle.Fighter1.Count < 4)
+                    int matchid = dbc.MatchId() + 1;
+
+                    if (battle.Fighter1.Count < 4)
                     {
                         Console.WriteLine("Füge Figther1 Cards hinzu");
                         battle.Fighter1name = username;
                         battle.FillDeckFigther(battle.Fighter1name, battle.Fighter1);
+
                         // Der bekommt eine Response: ihr Match startet gleich: matchid ist x .. Nachschauen in /battle/<matchid>
-                        res.ResponseBattle();
+                        res.ResponseBattle(matchid);
                     }
                     else
                     {
@@ -897,28 +901,82 @@ namespace REST_BRZAKALA_core
                         battle.Fighter2name = username;
                         battle.FillDeckFigther(battle.Fighter2name, battle.Fighter2);
                     }
+                    // KONTROLLE OB DECKS GEFÜLLT WERDEN:
+                    /*
                     foreach (Object obj in battle.Fighter1)
                         Console.WriteLine("   cards:{0}", obj);
                     Console.WriteLine("-----------------------------");
                     foreach (Object obj in battle.Fighter2)
                         Console.WriteLine("   cards:{0}", obj);
                     Console.WriteLine("-----------------------------");
+                    */
                     // NOW IF THE DECKS ARE FULL - LETS FIGHT!
                     if (battle.Fighter1.Count == 4 && battle.Fighter2.Count == 4)
                     {
+                        int winuser1 = 0;
+                        int winuser2 = 0;
                         for (int i = 0; i < 4; i++)
                         {
                             //SetWinner(string username1, string username2, string name1, string typ1, string ele1, int dam1, string name2, string typ2, string ele2, int dam2)
                             string x = battle.SetWinner(battle.Fighter1name, battle.Fighter2name, battle.Fighter1[i].name, battle.Fighter1[i].type, battle.Fighter1[i].element, battle.Fighter1[i].damage, battle.Fighter2[i].name, battle.Fighter2[i].type, battle.Fighter2[i].element, battle.Fighter2[i].damage);
                             Console.WriteLine(x);
+                            if(x == battle.Fighter1name)
+                            {
+                                winuser1++;
+                            }
+                            if (x == battle.Fighter2name)
+                            {
+                                winuser2++;
+                            }
                         }
+                        // Userstats setzen: 
+                        /* win = UpdateUserStatsWins(string user, int wins)
+                         * draw = UpdateUserStatsDraws(string user, int draws)
+                         * lose = UpdateUserStatsLoses(string user, int loses)
+                         * für das int einfügen: dbc.methode ( Select * from userstats split[0]..) GETUSERSTATS
+                         */
+                        // STATS From Fighter 1
+                        string data = dbc.GetUserStats(battle.Fighter1name);
+                        using var reader = new StringReader(data);
+                        int f1win = Int32.Parse(reader.ReadLine());
+                        int f1draw = Int32.Parse(reader.ReadLine());
+                        int f1lose = Int32.Parse(reader.ReadLine());
+                        // STATS From Fighter 2
+                        string data2 = dbc.GetUserStats(battle.Fighter1name);
+                        using var reader2 = new StringReader(data2);
+                        int f2win = Int32.Parse(reader2.ReadLine());
+                        int f2draw = Int32.Parse(reader2.ReadLine());
+                        int f2lose = Int32.Parse(reader2.ReadLine());
+                        // Winner bestimmen:
+                        string winner = "";
+                        if (winuser1 == winuser2)
+                        {
+                            winner = "Nobody";
+                            dbc.UpdateUserStatsDraws(battle.Fighter1name, f1draw + 1);
+                            dbc.UpdateUserStatsDraws(battle.Fighter2name, f2draw + 1);
+                        } 
+                        else if(winuser1 > winuser2)
+                        {
+                            winner = battle.Fighter1name;
+                            dbc.UpdateUserStatsWins(battle.Fighter1name, f1win +1);
+                            dbc.UpdateUserStatsLoses(battle.Fighter2name,f2lose +1);
+                        }
+                        else
+                        {
+                            winner = battle.Fighter2name;
+                            dbc.UpdateUserStatsWins(battle.Fighter2name, f2win + 1);
+                            dbc.UpdateUserStatsLoses(battle.Fighter1name, f1lose + 1);
+                        }
+                        // BattleHistory setzen:  matchid,winner,protokol:
+                        dbc.BattleHistory(matchid,winner,"protokol");
+                        Console.WriteLine("THE WINNER IS: {0}", winner);
 
                         // Nach dem Kampf wieder Alles Initialisieren für die nächsten Kämpfe:
                         battle.Fighter1.Clear();
                         battle.Fighter2.Clear();
                         battle.Fighter1name = "";
                         battle.Fighter2name = "";
-                        res.ResponseBattle();
+                        res.ResponseBattle(matchid);
                     }
                 }
                 else
@@ -926,22 +984,6 @@ namespace REST_BRZAKALA_core
                     //Console.WriteLine("Please Update your Deck, One or more Cards are not in your possesion anymore.");
                     res.ResponseBattleFailDeck();
                 }
-                /*
-                string fighters = rs.ContentStr;
-                string f1 = fighters.Split(",")[0];
-                string f2 = fighters.Split(",")[1];
-                res.ResponseBattle();
-                battle.FillDeckFigther(battle.Fighter1name, battle.Fighter1);
-                battle.FillDeckFigther(battle.Fighter2name, battle.Fighter2);
-                for (int i = 0; i < 4; i++)
-                {
-                    //SetWinner(string username1, string username2, string name1, string typ1, string ele1, int dam1, string name2, string typ2, string ele2, int dam2)
-                    string x = battle.SetWinner(battle.Fighter1name, battle.Fighter2name, battle.Fighter1[i].name, battle.Fighter1[i].type, battle.Fighter1[i].element, battle.Fighter1[i].damage, battle.Fighter2[i].name, battle.Fighter2[i].type, battle.Fighter2[i].element, battle.Fighter2[i].damage);
-                    Console.WriteLine(x);
-                }
-
-                
-                */
                 stream.Write(res.sendBytes, 0, res.sendBytes.Length);
                 rs.RequestBody.Clear();
             }

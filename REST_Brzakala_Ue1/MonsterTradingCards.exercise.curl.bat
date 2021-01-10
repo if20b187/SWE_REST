@@ -179,7 +179,7 @@ echo.
 
 REM --------------------------------------------------
 echo 11) configure deck
-curl -X PUT http://localhost:8080/deck --header "Content-Type: application/json" --header "Authorization: Basic kienboec-mtcgToken" -d "[\"18\", \"4\", \"11\", \"10\"]"
+curl -X PUT http://localhost:8080/deck --header "Content-Type: application/json" --header "Authorization: Basic kienboec-mtcgToken" -d "[\"3\", \"4\", \"11\", \"9\"]"
 echo.
 curl -X GET http://localhost:8080/deck --header "Authorization: Basic kienboec-mtcgToken"
 echo.
@@ -270,7 +270,8 @@ echo 17) battle
 start /b "kienboec battle" curl -X POST http://localhost:8080/battles --header "Authorization: Basic kienboec-mtcgToken"
 start /b "altenhof battle" curl -X POST http://localhost:8080/battles --header "Authorization: Basic altenhof-mtcgToken"
 
-curl -X GET http://localhost:8080/battle -d "kienboec,altenhof"
+curl -X POST http://localhost:8080/battle --header "Authorization: Basic kienboec-mtcgToken" 
+curl -X POST http://localhost:8080/battle --header "Authorization: Basic altenhof-mtcgToken" 
 
 ping localhost -n 10 >NUL 2>NUL
 

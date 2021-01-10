@@ -40,6 +40,19 @@ namespace REST_BRZAKALA_core
             cmd.ExecuteNonQuery();
             con.Close();
         }
+        public void BattleHistory(int id, string name, string protokol)
+        {
+            using var con = new NpgsqlConnection(cs);
+            con.Open();
+
+            using var cmd = new NpgsqlCommand("INSERT INTO battlehistory VALUES (@id, @name, @protokol)", con);
+
+            cmd.Parameters.AddWithValue("id", id);
+            cmd.Parameters.AddWithValue("name", name);
+            cmd.Parameters.AddWithValue("protokol", protokol);
+            cmd.ExecuteNonQuery();
+            con.Close();
+        }
         public void Trading(int id, string card, int mdamage,  string type, string username)
         {
             using var con = new NpgsqlConnection(cs);
@@ -289,11 +302,15 @@ namespace REST_BRZAKALA_core
             using NpgsqlDataReader rdr = cmd.ExecuteReader();
 
             string output = "";
-
-            while (rdr.Read())
+            try
             {
-
-                output = rdr.GetInt32(0).ToString() + "\n" + rdr.GetInt32(1).ToString() + "\n" + rdr.GetInt32(2).ToString();
+                while (rdr.Read())
+                {
+                    output = rdr.GetInt32(0).ToString() + "\n" + rdr.GetInt32(1).ToString() + "\n" + rdr.GetInt32(2).ToString();
+                }
+            }catch(Exception e)
+            {
+                Console.WriteLine("User dont exists.");
             }
             con.Close();
 
@@ -312,7 +329,7 @@ namespace REST_BRZAKALA_core
 
             while (rdr.Read())
             {
-                output = output + rdr.GetString(0) + " " + rdr.GetInt32(1).ToString() + " " + rdr.GetInt32(2).ToString() + " " + rdr.GetInt32(2).ToString() + "\n";
+                output = output + rdr.GetString(0) + " " + rdr.GetInt32(1).ToString() + " " + rdr.GetInt32(2).ToString() + " " + rdr.GetInt32(3).ToString() + "\n";
             }
             con.Close();
 
@@ -348,6 +365,39 @@ namespace REST_BRZAKALA_core
             cmd.Parameters.AddWithValue("name", name);
             cmd.Parameters.AddWithValue("bio", bio);
             cmd.Parameters.AddWithValue("image", image);
+            cmd.ExecuteNonQuery();
+            con.Close();
+        }
+        public void UpdateUserStatsWins(string user, int wins)
+        {
+            using var con = new NpgsqlConnection(cs);
+            con.Open();
+
+            using var cmd = new NpgsqlCommand("UPDATE userstats SET wins=@wins WHERE username=@username", con);
+            cmd.Parameters.AddWithValue("username", user);
+            cmd.Parameters.AddWithValue("wins", wins);
+            cmd.ExecuteNonQuery();
+            con.Close();
+        }
+        public void UpdateUserStatsDraws(string user, int draws)
+        {
+            using var con = new NpgsqlConnection(cs);
+            con.Open();
+
+            using var cmd = new NpgsqlCommand("UPDATE userstats SET draws=@draws WHERE username=@username", con);
+            cmd.Parameters.AddWithValue("username", user);
+            cmd.Parameters.AddWithValue("draws", draws);
+            cmd.ExecuteNonQuery();
+            con.Close();
+        }
+        public void UpdateUserStatsLoses(string user, int loses)
+        {
+            using var con = new NpgsqlConnection(cs);
+            con.Open();
+
+            using var cmd = new NpgsqlCommand("UPDATE userstats SET loses=@loses WHERE username=@username", con);
+            cmd.Parameters.AddWithValue("username", user);
+            cmd.Parameters.AddWithValue("loses", loses);
             cmd.ExecuteNonQuery();
             con.Close();
         }
@@ -449,6 +499,42 @@ namespace REST_BRZAKALA_core
                 catch (Exception e)
                 {
                     Console.WriteLine("NO CARD YET.");
+                }
+            }
+
+            //Console.WriteLine("Last Card id is: {0}", output);
+
+            return output;
+        }
+        public int MatchId()
+        {
+            using var con = new NpgsqlConnection(cs);
+            con.Open();
+
+            using var cmd = new NpgsqlCommand("SELECT max(matchid) FROM battlehistory", con);
+            using NpgsqlDataReader rdr = cmd.ExecuteReader();
+
+            int output = 0;
+
+            while (rdr.Read())
+            {
+                if (rdr.HasRows)
+                {
+                    //Console.WriteLine("Has rows");
+                    output = 0;
+                }
+                else
+                {
+                    output = rdr.GetInt32(0);
+                }
+
+                try
+                {
+                    output = rdr.GetInt32(0);
+                }
+                catch (Exception e)
+                {
+                    Console.WriteLine("NO MATCH ID YET.");
                 }
             }
 
