@@ -14,6 +14,10 @@ curl -X POST http://localhost:8080/users --header "Content-Type: application/jso
 echo.
 curl -X POST http://localhost:8080/users --header "Content-Type: application/json" -d "{\"Username\":\"altenhof\", \"Password\":\"markus\"}"
 echo.
+curl -X POST http://localhost:8080/users --header "Content-Type: application/json" -d "{\"Username\":\"testuser1\", \"Password\":\"password\"}"
+echo.
+curl -X POST http://localhost:8080/users --header "Content-Type: application/json" -d "{\"Username\":\"testuser2\", \"Password\":\"password\"}"
+echo.
 curl -X POST http://localhost:8080/users --header "Content-Type: application/json" -d "{\"Username\":\"admin\",    \"Password\":\"istrator\"}"
 echo.
 
@@ -32,6 +36,10 @@ echo.
 curl -X POST http://localhost:8080/sessions --header "Content-Type: application/json" -d "{\"Username\":\"admin\",    \"Password\":\"istrator\"}"
 echo.
 curl -X POST http://localhost:8080/sessions --header "Content-Type: application/json" -d "{\"Username\":\"kienboec\",    \"Password\":\"daniel\"}"
+echo.
+curl -X POST http://localhost:8080/sessions --header "Content-Type: application/json" -d "{\"Username\":\"testuser1\",    \"Password\":\"password\"}"
+echo.
+curl -X POST http://localhost:8080/sessions --header "Content-Type: application/json" -d "{\"Username\":\"testuser2\",    \"Password\":\"password\"}"
 echo.
 
 echo should fail:
@@ -124,6 +132,16 @@ echo.
 echo.
 
 REM --------------------------------------------------
+echo 4.1) acquire packages testuser1
+curl -X POST http://localhost:8080/transactions/packages --header "Content-Type: application/json" --header "Authorization: Basic testuser1-mtcgToken" 
+echo.
+curl -X POST http://localhost:8080/transactions/packages --header "Content-Type: application/json" --header "Authorization: Basic testuser1-mtcgToken" 
+echo.
+curl -X POST http://localhost:8080/transactions/packages --header "Content-Type: application/json" --header "Authorization: Basic testuser2-mtcgToken" 
+echo.
+curl -X POST http://localhost:8080/transactions/packages --header "Content-Type: application/json" --header "Authorization: Basic testuser2-mtcgToken" 
+
+REM --------------------------------------------------
 echo 5) acquire packages altenhof
 curl -X POST http://localhost:8080/transactions/packages --header "Content-Type: application/json" --header "Authorization: Basic altenhof-mtcgToken" 
 echo.
@@ -179,14 +197,18 @@ echo.
 
 REM --------------------------------------------------
 echo 11) configure deck
-curl -X PUT http://localhost:8080/deck --header "Content-Type: application/json" --header "Authorization: Basic kienboec-mtcgToken" -d "[\"9\", \"5\", \"2\", \"6\"]"
+curl -X PUT http://localhost:8080/deck --header "Content-Type: application/json" --header "Authorization: Basic kienboec-mtcgToken" -d "[\"6\", \"8\", \"3\", \"10\"]"
 echo.
 curl -X GET http://localhost:8080/deck --header "Authorization: Basic kienboec-mtcgToken"
 echo.
-curl -X PUT http://localhost:8080/deck --header "Content-Type: application/json" --header "Authorization: Basic altenhof-mtcgToken" -d "[\"6\", \"9\", \"8\", \"2\"]"
+curl -X PUT http://localhost:8080/deck --header "Content-Type: application/json" --header "Authorization: Basic altenhof-mtcgToken" -d "[\"19\", \"10\", \"5\", \"12\"]"
 echo.
 curl -X GET http://localhost:8080/deck --header "Authorization: Basic altenhof-mtcgToken"
 echo.
+echo.
+curl -X PUT http://localhost:8080/deck --header "Content-Type: application/json" --header "Authorization: Basic testuser1-mtcgToken" -d "[\"1\", \"11\", \"9\", \"19\"]"
+echo.
+curl -X PUT http://localhost:8080/deck --header "Content-Type: application/json" --header "Authorization: Basic testuser2-mtcgToken" -d "[\"6\", \"8\", \"10\", \"3\"]"
 echo.
 echo should fail and show original from before:
 curl -X PUT http://localhost:8080/deck --header "Content-Type: application/json" --header "Authorization: Basic altenhof-mtcgToken" -d "[\"1\", \"2\", \"3\", \"4\"]"
@@ -267,13 +289,25 @@ echo.
 
 REM --------------------------------------------------
 echo 17) battle
-start /b "kienboec battle" curl -X POST http://localhost:8080/battles --header "Authorization: Basic kienboec-mtcgToken"
-start /b "altenhof battle" curl -X POST http://localhost:8080/battles --header "Authorization: Basic altenhof-mtcgToken"
-
+echo.
 curl -X POST http://localhost:8080/battle --header "Authorization: Basic kienboec-mtcgToken" 
+echo.
 curl -X POST http://localhost:8080/battle --header "Authorization: Basic altenhof-mtcgToken" 
+echo.
+curl -X POST http://localhost:8080/battle --header "Authorization: Basic testuser1-mtcgToken"
+echo.
+curl -X POST http://localhost:8080/battle --header "Authorization: Basic testuser2-mtcgToken"
 
-ping localhost -n 10 >NUL 2>NUL
+REM --------------------------------------------------
+echo 17.1) battle History
+echo.
+curl -X GET http://localhost:8080/battle/1 --header "Authorization: Basic kienboec-mtcgToken" 
+echo.   
+curl -X GET http://localhost:8080/battle/1 --header "Authorization: Basic altenhof-mtcgToken" 
+echo.   
+curl -X GET http://localhost:8080/battle/2 --header "Authorization: Basic testuser1-mtcgToken"
+echo.   
+curl -X GET http://localhost:8080/battle/2 --header "Authorization: Basic testuser2-mtcgToken"
 
 REM --------------------------------------------------
 echo 18) Stats 
@@ -288,6 +322,18 @@ echo.
 REM --------------------------------------------------
 echo 19) scoreboard
 curl -X GET http://localhost:8080/score --header "Authorization: Basic kienboec-mtcgToken"
+echo.
+echo.
+
+REM --------------------------------------------------
+echo 19) ELO
+curl -X GET http://localhost:8080/elo/kienboec --header "Authorization: Basic kienboec-mtcgToken"
+echo.
+curl -X GET http://localhost:8080/elo/testuser1 --header "Authorization: Basic testuser1-mtcgToken"
+echo.
+curl -X GET http://localhost:8080/elo/altenhof --header "Authorization: Basic altenhof-mtcgToken"
+echo.
+curl -X GET http://localhost:8080/elo/testuser2 --header "Authorization: Basic testuser2-mtcgToken"
 echo.
 echo.
 
@@ -333,6 +379,4 @@ echo.
 REM --------------------------------------------------
 echo end...
 
-REM this is approx a sleep 
-ping localhost -n 100 >NUL 2>NUL
-@echo on
+

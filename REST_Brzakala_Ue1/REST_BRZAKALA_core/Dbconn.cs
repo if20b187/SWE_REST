@@ -304,6 +304,26 @@ namespace REST_BRZAKALA_core
 
             return output;
         }
+        public string GetBattleHis(int id)
+        {
+            using var con = new NpgsqlConnection(cs);
+            con.Open();
+
+            using var cmd = new NpgsqlCommand("SELECT matchid,winner,protokol FROM battlehistory WHERE matchid=@id", con);
+            cmd.Parameters.AddWithValue("id", id);
+            using NpgsqlDataReader rdr = cmd.ExecuteReader();
+
+            string output = "";
+
+            while (rdr.Read())
+            {
+
+                output = rdr.GetInt32(0).ToString() + "\n" + rdr.GetString(1) + "\n" + rdr.GetString(2);
+            }
+            con.Close();
+
+            return output;
+        }
         public string GetUserStats(string user)
         {
             using var con = new NpgsqlConnection(cs);
@@ -388,6 +408,17 @@ namespace REST_BRZAKALA_core
             using var cmd = new NpgsqlCommand("UPDATE userstats SET wins=@wins WHERE username=@username", con);
             cmd.Parameters.AddWithValue("username", user);
             cmd.Parameters.AddWithValue("wins", wins);
+            cmd.ExecuteNonQuery();
+            con.Close();
+        }
+        public void UpdateUserElo(string user, int elo)
+        {
+            using var con = new NpgsqlConnection(cs);
+            con.Open();
+
+            using var cmd = new NpgsqlCommand("UPDATE elo SET elo=@elo WHERE username=@username", con);
+            cmd.Parameters.AddWithValue("username", user);
+            cmd.Parameters.AddWithValue("elo", elo);
             cmd.ExecuteNonQuery();
             con.Close();
         }
@@ -629,7 +660,34 @@ namespace REST_BRZAKALA_core
             //Console.WriteLine("   card:{0}", obj);
             
         }
-       
+        public Boolean CheckBattleHistory()
+        {
+            using var con = new NpgsqlConnection(cs);
+            con.Open();
+
+            using var cmd = new NpgsqlCommand("SELECT matchid FROM battlehistory", con);
+            using NpgsqlDataReader rdr = cmd.ExecuteReader();
+
+            ArrayList loginArr = new ArrayList();
+            //string output = "";
+            int i = 0;
+            while (rdr.Read())
+            {
+                i = rdr.GetInt32(0);
+                loginArr.Add(i);
+            }
+            con.Close();
+
+            if (loginArr.Contains(i))
+            {
+                return true;
+            }
+            else
+            {
+                return false;
+            }
+        }
+
         public Boolean CheckLogin(string user)
         {
             using var con = new NpgsqlConnection(cs);
@@ -656,11 +714,6 @@ namespace REST_BRZAKALA_core
             {
                 return false;
             }
-
-            /*
-            foreach (Object obj in usersArr)
-            Console.WriteLine("   user:{0}", obj);
-            */
         }
         public string CheckToken(string token)
         {
@@ -704,6 +757,25 @@ namespace REST_BRZAKALA_core
             
 
             
+        }
+        public int CheckElo(string user)
+        {
+            using var con = new NpgsqlConnection(cs);
+            con.Open();
+
+            using var cmd = new NpgsqlCommand("SELECT elo FROM elo where username=@user", con);
+            cmd.Parameters.AddWithValue("user", user);
+            using NpgsqlDataReader rdr = cmd.ExecuteReader();
+
+            int output = 0;
+
+            while (rdr.Read())
+            {
+                
+                output = rdr.GetInt32(0);
+            }
+            con.Close();
+            return output;
         }
         public int CheckUserCoins(string user)
         {

@@ -75,7 +75,7 @@ namespace REST_BRZAKALA_core
 			res.lastPart = rs.Url.Split('/').Last();
 			*/
             string urllast = rs.Url.Split('/').Last();
-            Console.WriteLine("LASTPART: {0}",urllast);
+            Console.WriteLine("LASTPART: {0}", urllast);
             // GET ALL
             if (String.Compare(rs.Method, "GET") == 0 && String.Compare(rs.Url, "/message") == 0)
             {
@@ -271,7 +271,7 @@ namespace REST_BRZAKALA_core
 
                     // Full Card Info - id name damage element type
                     // Card 1
-                    string cardInfo1 = dbc.FullCardInfo(c1); 
+                    string cardInfo1 = dbc.FullCardInfo(c1);
                     int cid1 = Int32.Parse(cardInfo1.Split(' ')[0]); string cname1 = cardInfo1.Split(' ')[1]; int cdamage1 = Int32.Parse(cardInfo1.Split(' ')[2]); string celement1 = cardInfo1.Split(' ')[3]; string ctype1 = cardInfo1.Split(' ')[4];
                     // Card 2
                     string cardInfo2 = dbc.FullCardInfo(c2);
@@ -320,14 +320,14 @@ namespace REST_BRZAKALA_core
                     //Console.WriteLine(userCards);
 
                     //read line by line
-                    
+
                     using (StringReader reader = new StringReader(userCards))
                     {
                         string line;        //line
                         while ((line = reader.ReadLine()) != null)
                         {
                             //Console.WriteLine(line); // Request line by line ausgeben.
-             
+
                             if (string.IsNullOrEmpty(line))
                             {
                                 break;
@@ -339,7 +339,7 @@ namespace REST_BRZAKALA_core
                                 int cda = Int32.Parse(line.Split(' ')[2]);
                                 string cel = line.Split(' ')[3];
                                 string cty = line.Split(' ')[4];
-                                lc.Add(new Card(cid,cna,cda,cel,cty));
+                                lc.Add(new Card(cid, cna, cda, cel, cty));
                             }
                         }
                     }
@@ -371,7 +371,7 @@ namespace REST_BRZAKALA_core
                 if (String.Compare(rs.RequestBody["Authorization"], dbc.CheckToken(rs.RequestBody["Authorization"])) == 0)
                 {
                     List<Card> deckCards = new List<Card>();
-                    string deck  = dbc.GetUserDeck(dbc.TokenToUser(rs.RequestBody["Authorization"]));
+                    string deck = dbc.GetUserDeck(dbc.TokenToUser(rs.RequestBody["Authorization"]));
                     Console.WriteLine(deck);
 
                     //read line by line
@@ -391,12 +391,12 @@ namespace REST_BRZAKALA_core
                                 int damage = Int32.Parse(line.Split(',')[2]);
                                 string element = line.Split(',')[3];
                                 string type = line.Split(',')[4];
-                                deckCards.Add(new Card(id,name,damage,element,type));
+                                deckCards.Add(new Card(id, name, damage, element, type));
                             }
                         }
-                    }  
+                    }
                     string json = JsonConvert.SerializeObject(deckCards);
-                    
+
                     res.ResponseGetDeck(json);
                 }
                 else
@@ -479,12 +479,12 @@ namespace REST_BRZAKALA_core
                             string s2 = dbc.FullCardInfo(c2);
                             string s3 = dbc.FullCardInfo(c3);
                             string s4 = dbc.FullCardInfo(c4);
-                            s1= s1.Replace(" ", ",");
+                            s1 = s1.Replace(" ", ",");
                             s2 = s2.Replace(" ", ",");
                             s3 = s3.Replace(" ", ",");
                             s4 = s4.Replace(" ", ",");
                             //Console.WriteLine("{0} \n {1} \n {2} \n {3}\n", s1,s2,s3,s4);
-                            dbc.UpdateDeck(username,s1,s2,s3,s4);
+                            dbc.UpdateDeck(username, s1, s2, s3, s4);
                             res.ResponseConfigureDeck();
                         }
                         else
@@ -538,7 +538,7 @@ namespace REST_BRZAKALA_core
                 {
                     res.ResponseUserDataFail();
                 }
-                
+
                 stream.Write(res.sendBytes, 0, res.sendBytes.Length);
                 rs.RequestBody.Clear();
             }
@@ -562,10 +562,10 @@ namespace REST_BRZAKALA_core
                         Console.WriteLine("Wrong JSON Format!");
                         Console.WriteLine("------------------");
                     }
-                    
+
                     dbc.UpdateUserData(username, ud.Name, ud.Bio, ud.Image);
                     res.ResponseUpdateUserData();
-   
+
                 }
                 else
                 {
@@ -586,7 +586,7 @@ namespace REST_BRZAKALA_core
                     int i2 = Int32.Parse(reader.ReadLine());
                     int i3 = Int32.Parse(reader.ReadLine());
                     //Console.WriteLine("{0}{1}{2}",i1,i2,i3);
-                    Stats userStats = new Stats(i1,i2,i3);
+                    Stats userStats = new Stats(i1, i2, i3);
 
 
                     string json = JsonConvert.SerializeObject(userStats);
@@ -627,7 +627,7 @@ namespace REST_BRZAKALA_core
                                 int c2 = Int32.Parse(line.Split(' ')[1]);
                                 int c3 = Int32.Parse(line.Split(' ')[2]);
                                 int c4 = Int32.Parse(line.Split(' ')[3]);
-                                scorestats.Add(new Score(c1,c2,c3,c4));
+                                scorestats.Add(new Score(c1, c2, c3, c4));
                             }
                         }
                     }
@@ -702,7 +702,7 @@ namespace REST_BRZAKALA_core
                 if (String.Compare(rs.RequestBody["Authorization"], dbc.CheckToken(rs.RequestBody["Authorization"])) == 0)
                 {
                     // init new Trading
-                    Trading td = new Trading(0,"x",0,"x");
+                    Trading td = new Trading(0, "x", 0, "x");
                     // set Trading values
                     try
                     {
@@ -724,7 +724,7 @@ namespace REST_BRZAKALA_core
                     {
                         res.ResponseTradingFail();
                     }
-                    else if (!dbc.CheckUserHasCard(username,Int32.Parse(td.Karte), Int32.Parse(td.Karte)))
+                    else if (!dbc.CheckUserHasCard(username, Int32.Parse(td.Karte), Int32.Parse(td.Karte)))
                     {
                         res.ResponseTradingFailCard();
                     }
@@ -736,7 +736,7 @@ namespace REST_BRZAKALA_core
                             dbc.TradingDeleteUserCard(username, Int32.Parse(td.Karte));
                             res.ResponsePostCardTrade();
                         }
-                        catch(Exception e)
+                        catch (Exception e)
                         {
                             res.ResponseTradingFail();
                         }
@@ -767,13 +767,13 @@ namespace REST_BRZAKALA_core
                         int cid = dbc.GetCardFromTradingID(Int32.Parse(urllast));
                         string fullc = dbc.FullCardInfo(cid);
 
-                        int cid1 = Int32.Parse(fullc.Split(' ')[0]); 
-                        string cname1 = fullc.Split(' ')[1]; 
-                        int cdamage1 = Int32.Parse(fullc.Split(' ')[2]); 
-                        string celement1 = fullc.Split(' ')[3]; 
+                        int cid1 = Int32.Parse(fullc.Split(' ')[0]);
+                        string cname1 = fullc.Split(' ')[1];
+                        int cdamage1 = Int32.Parse(fullc.Split(' ')[2]);
+                        string celement1 = fullc.Split(' ')[3];
                         string ctype1 = fullc.Split(' ')[4];
 
-                        dbc.AddUserCard(username,cid1,cname1,cdamage1,celement1,ctype1);
+                        dbc.AddUserCard(username, cid1, cname1, cdamage1, celement1, ctype1);
                         dbc.DeleteTrading(Int32.Parse(urllast));
                         res.ResponseTradingDelete();
                     }
@@ -805,8 +805,9 @@ namespace REST_BRZAKALA_core
                 int eintauschCard = Int32.Parse(rs.ContentStr);
                 int tradingCard = dbc.GetCardFromTradingID(Int32.Parse(urllast));
                 Console.WriteLine("hascard: {0}, cardidfull: {1}", eintauschCard, tradingCard);
-                try {
-                    if (String.Compare(rs.RequestBody["Authorization"], dbc.CheckToken(rs.RequestBody["Authorization"])) == 0 && !String.Equals(username, dbc.CheckTradingUsernameId(Int32.Parse(urllast)))  && dbc.CheckUserHasCard(username, eintauschCard, eintauschCard))
+                try
+                {
+                    if (String.Compare(rs.RequestBody["Authorization"], dbc.CheckToken(rs.RequestBody["Authorization"])) == 0 && !String.Equals(username, dbc.CheckTradingUsernameId(Int32.Parse(urllast))) && dbc.CheckUserHasCard(username, eintauschCard, eintauschCard))
                     {
                         try
                         {
@@ -828,9 +829,9 @@ namespace REST_BRZAKALA_core
                             if (String.Compare(ctype, eintype) == 0 && cmind <= einmind)
                             {
                                 // Trade Card User - bekommt die neue Karte - EinsatzKarte wird gelöscht aus trading.
-                                string cardInfo1 = dbc.FullCardInfo(tradingCard);  
+                                string cardInfo1 = dbc.FullCardInfo(tradingCard);
                                 int cid1 = Int32.Parse(cardInfo1.Split(' ')[0]); string cname1 = cardInfo1.Split(' ')[1]; int cdamage1 = Int32.Parse(cardInfo1.Split(' ')[2]); string celement1 = cardInfo1.Split(' ')[3]; string ctype1 = cardInfo1.Split(' ')[4];
-                                dbc.AddUserCard(username, cid1,cname1,cdamage1,celement1,ctype1);
+                                dbc.AddUserCard(username, cid1, cname1, cdamage1, celement1, ctype1);
 
                                 // Eintausch User - seine Karte wird ihm gelöscht - bekommt die Karte mit der Id vom Trading.
                                 dbc.TradingDeleteUserCard(username, eintauschCard);
@@ -855,21 +856,22 @@ namespace REST_BRZAKALA_core
                         // Selbe Fehlermeldung - "Failed - do you provide your authorization?"
                         res.ResponseUpdateUserDataFail();
                     }
-                }catch (Exception e)
+                }
+                catch (Exception e)
                 {
                     res.ResponseUpdateUserDataFail();
                 }
                 stream.Write(res.sendBytes, 0, res.sendBytes.Length);
                 rs.RequestBody.Clear();
             }
-            // BATTLE TEST - Wird zu BATTLE LIST ANMELDEN
+            //  BATTLE LIST ANMELDEN
             /* WICHTIG: HIER CHECK OB SEIN DECK AKTUELL IST!
              * Einfach überprüfen ob die Ids der im deck hat noch in seinen Usercards verfügbar sind.
              * Wenn nicht -> RESPONSE "Bitte Deck aktualisieren - Deck ist nicht Up2date".
              */
             else if (String.Compare(rs.Method, "POST") == 0 && String.Compare(rs.Url, "/battle") == 0 && rs.RequestBody.ContainsKey("Authorization") && dbc.CheckUserExists(dbc.TokenToUser(rs.RequestBody["Authorization"])))
             {
-                
+
                 string username = dbc.TokenToUser(rs.RequestBody["Authorization"]);
                 string deckid1 = dbc.GetUserDeck(username).Split('\n')[0];
                 string deckid2 = dbc.GetUserDeck(username).Split('\n')[1];
@@ -879,7 +881,7 @@ namespace REST_BRZAKALA_core
                 int cardiddeck2 = Int32.Parse(deckid2.Split(',')[0]);
                 int cardiddeck3 = Int32.Parse(deckid3.Split(',')[0]);
                 int cardiddeck4 = Int32.Parse(deckid4.Split(',')[0]);
-                Console.WriteLine("deck: {0},{1},{2},{3}",cardiddeck1,cardiddeck2,cardiddeck3,cardiddeck4);
+                Console.WriteLine("deck: {0},{1},{2},{3}", cardiddeck1, cardiddeck2, cardiddeck3, cardiddeck4);
 
                 // Fighter definieren:
 
@@ -921,8 +923,8 @@ namespace REST_BRZAKALA_core
                         {
                             //SetWinner(string username1, string username2, string name1, string typ1, string ele1, int dam1, string name2, string typ2, string ele2, int dam2)
                             string x = battle.SetWinner(battle.Fighter1name, battle.Fighter2name, battle.Fighter1[i].name, battle.Fighter1[i].type, battle.Fighter1[i].element, battle.Fighter1[i].damage, battle.Fighter2[i].name, battle.Fighter2[i].type, battle.Fighter2[i].element, battle.Fighter2[i].damage);
-                            protokol = protokol + "Round " + i + " " + x + " won.\n"; 
-                            if(x == battle.Fighter1name)
+                            protokol = protokol + "Round " + i + " " + x + " won.\n";
+                            if (x == battle.Fighter1name)
                             {
                                 winuser1++;
                             }
@@ -949,6 +951,9 @@ namespace REST_BRZAKALA_core
                         int f2win = Int32.Parse(reader2.ReadLine());
                         int f2draw = Int32.Parse(reader2.ReadLine());
                         int f2lose = Int32.Parse(reader2.ReadLine());
+                        // ELO SET
+                        int f1elo = dbc.CheckElo(battle.Fighter1name);
+                        int f2elo = dbc.CheckElo(battle.Fighter2name);
                         // Winner bestimmen:
                         string winner = "";
                         if (winuser1 == winuser2)
@@ -956,21 +961,25 @@ namespace REST_BRZAKALA_core
                             winner = "Nobody";
                             dbc.UpdateUserStatsDraws(battle.Fighter1name, f1draw + 1);
                             dbc.UpdateUserStatsDraws(battle.Fighter2name, f2draw + 1);
-                        } 
-                        else if(winuser1 > winuser2)
+                        }
+                        else if (winuser1 > winuser2)
                         {
                             winner = battle.Fighter1name;
-                            dbc.UpdateUserStatsWins(battle.Fighter1name, f1win +1);
-                            dbc.UpdateUserStatsLoses(battle.Fighter2name,f2lose +1);
+                            dbc.UpdateUserElo(winner, f1elo + 3);
+                            dbc.UpdateUserElo(battle.Fighter2name, f2elo - 5);
+                            dbc.UpdateUserStatsWins(battle.Fighter1name, f1win + 1);
+                            dbc.UpdateUserStatsLoses(battle.Fighter2name, f2lose + 1);
                         }
                         else
                         {
                             winner = battle.Fighter2name;
+                            dbc.UpdateUserElo(winner, f1elo + 3);
+                            dbc.UpdateUserElo(battle.Fighter1name, f2elo - 5);
                             dbc.UpdateUserStatsWins(battle.Fighter2name, f2win + 1);
                             dbc.UpdateUserStatsLoses(battle.Fighter1name, f1lose + 1);
                         }
                         // BattleHistory setzen:  matchid,winner,protokol:
-                        dbc.BattleHistory(matchid,winner,protokol);
+                        dbc.BattleHistory(matchid, winner, protokol);
                         Console.WriteLine("THE WINNER IS: {0}", winner);
 
                         // Nach dem Kampf wieder Alles Initialisieren für die nächsten Kämpfe:
@@ -978,7 +987,7 @@ namespace REST_BRZAKALA_core
                         battle.Fighter2.Clear();
                         battle.Fighter1name = "";
                         battle.Fighter2name = "";
-                        res.ResponseBattle(matchid);
+                        res.ResponseBattleF2(matchid);
                     }
                 }
                 else
@@ -986,6 +995,71 @@ namespace REST_BRZAKALA_core
                     //Console.WriteLine("Please Update your Deck, One or more Cards are not in your possesion anymore.");
                     res.ResponseBattleFailDeck();
                 }
+                stream.Write(res.sendBytes, 0, res.sendBytes.Length);
+                rs.RequestBody.Clear();
+            }
+            // SHOW BATTLE HISTORY  - ROUTE: /battle/<matchid>
+            else if (String.Compare(rs.Method, "GET") == 0 && String.Compare(rs.Url, "/battle/" + urllast) == 0 && rs.RequestBody.ContainsKey("Authorization"))
+            {
+                if (dbc.CheckBattleHistory())
+                {
+                    if (String.Compare(rs.RequestBody["Authorization"], dbc.CheckToken(rs.RequestBody["Authorization"])) == 0)
+                    {
+                        string data = dbc.GetBattleHis(Int32.Parse(urllast));
+
+                        using var reader = new StringReader(data);
+                        int s1 = Int32.Parse(reader.ReadLine());
+                        string s2 = reader.ReadLine();
+                        string s3 = reader.ReadLine() + " " + reader.ReadLine() + " " + reader.ReadLine() + " " + reader.ReadLine();
+                        History bh = new History(s1, s2, s3);
+
+                        string json = JsonConvert.SerializeObject(bh);
+
+                        // Gibt einfach den Json aus.
+                        res.ResponseGetUserData(json);
+                    }
+                    else
+                    {
+                        // Do you provide Autho?
+                        res.ResponseUserDataFail();
+                    }
+                }
+                else
+                {
+                    // Do you provide Autho?
+                    res.ResponseUserDataFail();
+                }
+
+                stream.Write(res.sendBytes, 0, res.sendBytes.Length);
+                rs.RequestBody.Clear();
+            }
+            // SHOW ELO - ROUTE: /elo/<username>
+            else if (String.Compare(rs.Method, "GET") == 0 && String.Compare(rs.Url, "/elo/" + dbc.TokenToUser(rs.RequestBody["Authorization"])) == 0 && rs.RequestBody.ContainsKey("Authorization"))
+            {
+                if (String.Compare(rs.Url, "/elo/" + dbc.TokenToUser(rs.RequestBody["Authorization"])) == 0)
+                {
+                    if (String.Compare(rs.RequestBody["Authorization"], dbc.CheckToken(rs.RequestBody["Authorization"])) == 0)
+                    {
+                        string data = dbc.CheckElo(dbc.TokenToUser(rs.RequestBody["Authorization"])).ToString();
+
+                        List<string> elolist = new List<string>();
+                        elolist.Add(data);
+                        string json = JsonConvert.SerializeObject(elolist);
+
+                        res.ResponseGetUserData(json);
+                    }
+                    else
+                    {
+                        // Authorization?
+                        res.ResponseUserDataFail();
+                    }
+                }
+                else
+                {
+                    // Authorization?
+                    res.ResponseUserDataFail();
+                }
+
                 stream.Write(res.sendBytes, 0, res.sendBytes.Length);
                 rs.RequestBody.Clear();
             }
@@ -1018,11 +1092,10 @@ namespace REST_BRZAKALA_core
             {
                 return false;
             }
-            
         }
         public Boolean SameCards(int a, int b, int c, int d)
         {
-            if(a == b || a == c || a == d || b == c || b == d || c == d)
+            if (a == b || a == c || a == d || b == c || b == d || c == d)
             {
                 return true;
             }
