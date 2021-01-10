@@ -189,7 +189,7 @@ Damit ein User gewinnen oder verlieren kann muss die Funktionalität der Battlel
 
 #### Time spend:
 
-Über 100 Stunden sind in das Projekt eingeflossen.
+70 Stunden sind in das Projekt eingeflossen.
 
 #### Github:
 
