@@ -379,8 +379,117 @@ namespace REST_BRZAKALA_core
                     return username2;
                 }
             }
+            else if (typ1 == "monster" && ele1 == "fire" && typ2 == "monster" && ele2 == "normal")
+            {
+                dam1 = dam1 * 2;
+                dam2 = dam2 / 2;
+                Console.WriteLine("Dam1 is {0}, Dam2 is {1}", dam1, dam2);
+                if (dam1 == dam2)
+                {
+                    return "draw";
+                }
+                else if (dam1 > dam2)
+                {
+                    return username1;
+                }
+                else
+                {
+                    return username2;
+                }
+            }
+            else if (typ1 == "monster" && ele1 == "normal" && typ2 == "monster" && ele2 == "fire")
+            {
+                dam1 = dam1 / 2;
+                dam2 = dam2 * 2;
+                Console.WriteLine("Dam1 is {0}, Dam2 is {1}", dam1, dam2);
+                if (dam1 == dam2)
+                {
+                    return "draw";
+                }
+                else if (dam1 > dam2)
+                {
+                    return username1;
+                }
+                else
+                {
+                    return username2;
+                }
+            }
+            else if (typ1 == "spell" && ele1 == "normal" && typ2 == "monster" && ele2 == "fire")
+            {
+                dam1 = dam1 / 2;
+                dam2 = dam2 * 2;
+                Console.WriteLine("Dam1 is {0}, Dam2 is {1}", dam1, dam2);
+                if (dam1 == dam2)
+                {
+                    return "draw";
+                }
+                else if (dam1 > dam2)
+                {
+                    return username1;
+                }
+                else
+                {
+                    return username2;
+                }
+            }
+            else if (typ1 == "monster" && ele1 == "fire" && typ2 == "spell" && ele2 == "normal")
+            {
+                dam1 = dam1 * 2;
+                dam2 = dam2 / 2;
+                Console.WriteLine("Dam1 is {0}, Dam2 is {1}", dam1, dam2);
+                if (dam1 == dam2)
+                {
+                    return "draw";
+                }
+                else if (dam1 > dam2)
+                {
+                    return username1;
+                }
+                else
+                {
+                    return username2;
+                }
+            }
+            else if (typ1 == "monster" && ele1 == "normal" && typ2 == "monster" && ele2 == "fire")
+            {
+                dam1 = dam1 / 2;
+                dam2 = dam2 * 2;
+                Console.WriteLine("Dam1 is {0}, Dam2 is {1}", dam1, dam2);
+                if (dam1 == dam2)
+                {
+                    return "draw";
+                }
+                else if (dam1 > dam2)
+                {
+                    return username1;
+                }
+                else
+                {
+                    return username2;
+                }
+            }
+            else if (typ1 == "monster" && ele1 == "fire" && typ2 == "monster" && ele2 == "normal")
+            {
+                dam1 = dam1 * 2;
+                dam2 = dam2 / 2;
+                Console.WriteLine("Dam1 is {0}, Dam2 is {1}", dam1, dam2);
+                if (dam1 == dam2)
+                {
+                    return "draw";
+                }
+                else if (dam1 > dam2)
+                {
+                    return username1;
+                }
+                else
+                {
+                    return username2;
+                }
+            }
             else
             {
+                Console.WriteLine("FALSCH");
                 return "FALSCH";
             }
         }

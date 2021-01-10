@@ -179,11 +179,11 @@ echo.
 
 REM --------------------------------------------------
 echo 11) configure deck
-curl -X PUT http://localhost:8080/deck --header "Content-Type: application/json" --header "Authorization: Basic kienboec-mtcgToken" -d "[\"3\", \"4\", \"11\", \"9\"]"
+curl -X PUT http://localhost:8080/deck --header "Content-Type: application/json" --header "Authorization: Basic kienboec-mtcgToken" -d "[\"9\", \"5\", \"2\", \"6\"]"
 echo.
 curl -X GET http://localhost:8080/deck --header "Authorization: Basic kienboec-mtcgToken"
 echo.
-curl -X PUT http://localhost:8080/deck --header "Content-Type: application/json" --header "Authorization: Basic altenhof-mtcgToken" -d "[\"12\", \"14\", \"9\", \"10\"]"
+curl -X PUT http://localhost:8080/deck --header "Content-Type: application/json" --header "Authorization: Basic altenhof-mtcgToken" -d "[\"6\", \"9\", \"8\", \"2\"]"
 echo.
 curl -X GET http://localhost:8080/deck --header "Authorization: Basic altenhof-mtcgToken"
 echo.

@@ -136,6 +136,7 @@ namespace REST_BRZAKALA_core
                     dbc.CreateDeck(rs.acc.Username);
                     dbc.CreateUserdata(rs.acc.Username);
                     dbc.CreateUserstats(rs.acc.Username);
+                    dbc.Elo(rs.acc.Username);
 
                 }
 
@@ -911,6 +912,7 @@ namespace REST_BRZAKALA_core
                     Console.WriteLine("-----------------------------");
                     */
                     // NOW IF THE DECKS ARE FULL - LETS FIGHT!
+                    string protokol = "";
                     if (battle.Fighter1.Count == 4 && battle.Fighter2.Count == 4)
                     {
                         int winuser1 = 0;
@@ -919,7 +921,7 @@ namespace REST_BRZAKALA_core
                         {
                             //SetWinner(string username1, string username2, string name1, string typ1, string ele1, int dam1, string name2, string typ2, string ele2, int dam2)
                             string x = battle.SetWinner(battle.Fighter1name, battle.Fighter2name, battle.Fighter1[i].name, battle.Fighter1[i].type, battle.Fighter1[i].element, battle.Fighter1[i].damage, battle.Fighter2[i].name, battle.Fighter2[i].type, battle.Fighter2[i].element, battle.Fighter2[i].damage);
-                            Console.WriteLine(x);
+                            protokol = protokol + "Round " + i + " " + x + " won.\n"; 
                             if(x == battle.Fighter1name)
                             {
                                 winuser1++;
@@ -968,7 +970,7 @@ namespace REST_BRZAKALA_core
                             dbc.UpdateUserStatsLoses(battle.Fighter1name, f1lose + 1);
                         }
                         // BattleHistory setzen:  matchid,winner,protokol:
-                        dbc.BattleHistory(matchid,winner,"protokol");
+                        dbc.BattleHistory(matchid,winner,protokol);
                         Console.WriteLine("THE WINNER IS: {0}", winner);
 
                         // Nach dem Kampf wieder Alles Initialisieren für die nächsten Kämpfe:

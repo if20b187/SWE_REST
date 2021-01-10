@@ -128,6 +128,18 @@ namespace REST_BRZAKALA_core
             cmd.ExecuteNonQuery();
             con.Close();
         }
+        public void Elo(string username)
+        {
+            using var con = new NpgsqlConnection(cs);
+            con.Open();
+
+            using var cmd = new NpgsqlCommand("INSERT INTO elo VALUES (@username, @elo)", con);
+
+            cmd.Parameters.AddWithValue("username", username);
+            cmd.Parameters.AddWithValue("elo", 100);
+            cmd.ExecuteNonQuery();
+            con.Close();
+        }
         public void Packages(int id, int card1, int card2, int card3, int card4, int card5)
         {
             using var con = new NpgsqlConnection(cs);
