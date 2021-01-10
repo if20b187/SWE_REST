@@ -192,18 +192,18 @@ echo.
 
 REM --------------------------------------------------
 echo 11) configure deck
-curl -X PUT http://localhost:8080/deck --header "Content-Type: application/json" --header "Authorization: Basic kienboec-mtcgToken" -d "[\"6\", \"8\", \"3\", \"10\"]"
+curl -X PUT http://localhost:8080/deck --header "Content-Type: application/json" --header "Authorization: Basic kienboec-mtcgToken" -d "[\"1\", \"3\", \"6\", \"9\"]"
 echo.
 curl -X GET http://localhost:8080/deck --header "Authorization: Basic kienboec-mtcgToken"
 echo.
-curl -X PUT http://localhost:8080/deck --header "Content-Type: application/json" --header "Authorization: Basic altenhof-mtcgToken" -d "[\"19\", \"10\", \"5\", \"12\"]"
+curl -X PUT http://localhost:8080/deck --header "Content-Type: application/json" --header "Authorization: Basic altenhof-mtcgToken" -d "[\"12\", \"14\", \"16\", \"18\"]"
 echo.
 curl -X GET http://localhost:8080/deck --header "Authorization: Basic altenhof-mtcgToken"
 echo.
 echo.
-curl -X PUT http://localhost:8080/deck --header "Content-Type: application/json" --header "Authorization: Basic testuser1-mtcgToken" -d "[\"1\", \"2\", \"3\", \"4\"]"
+curl -X PUT http://localhost:8080/deck --header "Content-Type: application/json" --header "Authorization: Basic testuser1-mtcgToken" -d "[\"1\", \"4\", \"6\", \"10\"]"
 echo.
-curl -X PUT http://localhost:8080/deck --header "Content-Type: application/json" --header "Authorization: Basic testuser2-mtcgToken" -d "[\"11\", \"12\", \"13\", \"14\"]"
+curl -X PUT http://localhost:8080/deck --header "Content-Type: application/json" --header "Authorization: Basic testuser2-mtcgToken" -d "[\"12\", \"13\", \"18\", \"19\"]"
 echo.
 echo should fail and show original from before:
 curl -X PUT http://localhost:8080/deck --header "Content-Type: application/json" --header "Authorization: Basic testuser2-mtcgToken" -d "[\"1\", \"2\", \"3\", \"4\"]"
@@ -352,10 +352,10 @@ echo.
 REM --------------------------------------------------
 echo 20) trade
 echo check trading deals
-curl -X GET http://localhost:8080/tradings --header "Authorization: Basic kienboec-mtcgToken"
+curl -X GET http://localhost:8080/tradings --header "Authorization: Basic testuser1-mtcgToken"
 echo.
 echo create trading deal
-curl -X POST http://localhost:8080/tradings --header "Content-Type: application/json" --header "Authorization: Basic kienboec-mtcgToken" -d "{\"Tradingid\": \"1\", \"Karte\": \"15\", \"MinDamage\": \"10\", \"Type\": \"spell\"}"
+curl -X POST http://localhost:8080/tradings --header "Content-Type: application/json" --header "Authorization: Basic testuser1-mtcgToken" -d "{\"Tradingid\": \"1\", \"Karte\": \"1\", \"MinDamage\": \"30\", \"Type\": \"spell\"}"
 echo.
 echo check trading deals
 curl -X GET http://localhost:8080/tradings --header "Authorization: Basic kienboec-mtcgToken"
@@ -368,20 +368,24 @@ echo.
 echo.
 
 REM --------------------------------------------------
-echo 21) check trading deals
+echo 21) check trading deals   CARD 1 GEGEN 13
 curl -X GET http://localhost:8080/tradings  --header "Authorization: Basic kienboec-mtcgToken"
 echo.
-curl -X POST http://localhost:8080/tradings --header "Content-Type: application/json" --header "Authorization: Basic kienboec-mtcgToken" -d "{\"Tradingid\": \"1\", \"Karte\": \"15\", \"MinDamage\": \"10\", \"Type\": \"spell\"}"
+curl -X POST http://localhost:8080/tradings --header "Content-Type: application/json" --header "Authorization: Basic testuser1-mtcgToken" -d "{\"Tradingid\": \"1\", \"Karte\": \"1\", \"MinDamage\": \"30\", \"Type\": \"spell\"}"
+echo.
 curl -X GET http://localhost:8080/tradings  --header "Authorization: Basic kienboec-mtcgToken"
 echo.
 curl -X GET http://localhost:8080/tradings  --header "Authorization: Basic altenhof-mtcgToken"
 echo.
 echo try to trade with yourself (should fail)
-curl -X POST http://localhost:8080/tradings/1 --header "Content-Type: application/json" --header "Authorization: Basic kienboec-mtcgToken" -d "3"
+curl -X POST http://localhost:8080/tradings/1 --header "Content-Type: application/json" --header "Authorization: Basic testuser1-mtcgToken" -d "3"
 echo.
 echo try to trade 
 echo.
-curl -X POST http://localhost:8080/tradings/1 --header "Content-Type: application/json" --header "Authorization: Basic altenhof-mtcgToken" -d "19"
+echo SHOULD FAIL BECAUSE 11 is a MONSTER
+curl -X POST http://localhost:8080/tradings/1 --header "Content-Type: application/json" --header "Authorization: Basic testuser2-mtcgToken" -d "11"
+echo.
+curl -X POST http://localhost:8080/tradings/1 --header "Content-Type: application/json" --header "Authorization: Basic testuser2-mtcgToken" -d "13"
 echo.
 curl -X GET http://localhost:8080/tradings --header "Authorization: Basic kienboec-mtcgToken"
 echo.

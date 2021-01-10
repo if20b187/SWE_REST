@@ -14,17 +14,6 @@ namespace REST_BRZAKALA_core
             Fighter2 = new List<Card>();
         }
 
-        /* Battle Fighter1 Deck vs Fighter2 Deck
-         * WICHTIG:
-         * Um von der ersten karte die id zu bekommen usw.:
-         * battle.Fighter1[0].id
-         */
-        public void BattleF1vsF2(string user1, string user2)
-        {
-            int winFight1 = 0;
-            int winFight2 = 0;
-        }
-
         //returns Winner
         public string SetWinner(string username1, string username2, string name1, string typ1,string ele1, int dam1, string name2, string typ2, string ele2, int dam2)
         {
@@ -53,6 +42,11 @@ namespace REST_BRZAKALA_core
                 Console.WriteLine("Wizzard Wins");
                 return username2;
             }
+            else if (name1 == "Wizzard" && name2 == "Knight")
+            {
+                Console.WriteLine("Wizzard Wins");
+                return username2;
+            }
             else if (name1 == "Knight" && typ2 == "spell" && ele2 =="water")
             {
                 Console.WriteLine("Spell & Water Wins");
@@ -62,6 +56,11 @@ namespace REST_BRZAKALA_core
             {
                 Console.WriteLine("Spell & Water Wins");
                 return username1;
+            }
+            else if (name1 == "Kraken" && name2 == "Kraken")
+            {
+                Console.WriteLine("draw");
+                return "draw";
             }
             else if (name1 == "Kraken" && typ2 == "spell")
             {
@@ -138,6 +137,102 @@ namespace REST_BRZAKALA_core
                 }
             }
             else if (typ1 == "spell" && ele1 == "water" && typ2 == "spell" && ele2 == "water")
+            {
+                Console.WriteLine("Dam1 is {0}, Dam2 is {1}", dam1, dam2);
+                if (dam1 == dam2)
+                {
+                    return "draw";
+                }
+                else if (dam1 > dam2)
+                {
+                    return username1;
+                }
+                else
+                {
+                    return username2;
+                }
+            }
+            else if (typ1 == "monster" && ele1 == "water" && typ2 == "spell" && ele2 == "water")
+            {
+                Console.WriteLine("Dam1 is {0}, Dam2 is {1}", dam1, dam2);
+                if (dam1 == dam2)
+                {
+                    return "draw";
+                }
+                else if (dam1 > dam2)
+                {
+                    return username1;
+                }
+                else
+                {
+                    return username2;
+                }
+            }
+            else if (typ1 == "spell" && ele1 == "water" && typ2 == "monster" && ele2 == "water")
+            {
+                Console.WriteLine("Dam1 is {0}, Dam2 is {1}", dam1, dam2);
+                if (dam1 == dam2)
+                {
+                    return "draw";
+                }
+                else if (dam1 > dam2)
+                {
+                    return username1;
+                }
+                else
+                {
+                    return username2;
+                }
+            }
+            else if (typ1 == "monster" && ele1 == "fire" && typ2 == "spell" && ele2 == "fire")
+            {
+                Console.WriteLine("Dam1 is {0}, Dam2 is {1}", dam1, dam2);
+                if (dam1 == dam2)
+                {
+                    return "draw";
+                }
+                else if (dam1 > dam2)
+                {
+                    return username1;
+                }
+                else
+                {
+                    return username2;
+                }
+            }
+            else if (typ1 == "spell" && ele1 == "fire" && typ2 == "monster" && ele2 == "fire")
+            {
+                Console.WriteLine("Dam1 is {0}, Dam2 is {1}", dam1, dam2);
+                if (dam1 == dam2)
+                {
+                    return "draw";
+                }
+                else if (dam1 > dam2)
+                {
+                    return username1;
+                }
+                else
+                {
+                    return username2;
+                }
+            }
+            else if (typ1 == "monster" && ele1 == "normal" && typ2 == "spell" && ele2 == "normal")
+            {
+                Console.WriteLine("Dam1 is {0}, Dam2 is {1}", dam1, dam2);
+                if (dam1 == dam2)
+                {
+                    return "draw";
+                }
+                else if (dam1 > dam2)
+                {
+                    return username1;
+                }
+                else
+                {
+                    return username2;
+                }
+            }
+            else if (typ1 == "spell" && ele1 == "normal" && typ2 == "monster" && ele2 == "normal")
             {
                 Console.WriteLine("Dam1 is {0}, Dam2 is {1}", dam1, dam2);
                 if (dam1 == dam2)
@@ -395,6 +490,54 @@ namespace REST_BRZAKALA_core
                     return username2;
                 }
             }
+            else if (typ1 == "monster" && ele1 == "water" && typ2 == "monster" && ele2 == "water")
+            {
+                Console.WriteLine("Dam1 is {0}, Dam2 is {1}", dam1, dam2);
+                if (dam1 == dam2)
+                {
+                    return "draw";
+                }
+                else if (dam1 > dam2)
+                {
+                    return username1;
+                }
+                else
+                {
+                    return username2;
+                }
+            }
+            else if (typ1 == "monster" && ele1 == "normal" && typ2 == "monster" && ele2 == "normal")
+            {
+                Console.WriteLine("Dam1 is {0}, Dam2 is {1}", dam1, dam2);
+                if (dam1 == dam2)
+                {
+                    return "draw";
+                }
+                else if (dam1 > dam2)
+                {
+                    return username1;
+                }
+                else
+                {
+                    return username2;
+                }
+            }
+            else if (typ1 == "monster" && ele1 == "fire" && typ2 == "monster" && ele2 == "fire")
+            {
+                Console.WriteLine("Dam1 is {0}, Dam2 is {1}", dam1, dam2);
+                if (dam1 == dam2)
+                {
+                    return "draw";
+                }
+                else if (dam1 > dam2)
+                {
+                    return username1;
+                }
+                else
+                {
+                    return username2;
+                }
+            }
             else if (typ1 == "monster" && ele1 == "fire" && typ2 == "monster" && ele2 == "normal")
             {
                 dam1 = dam1 * 2;
@@ -449,6 +592,7 @@ namespace REST_BRZAKALA_core
                     return username2;
                 }
             }
+
             else if (typ1 == "monster" && ele1 == "fire" && typ2 == "monster" && ele2 == "water")
             {
                 dam1 = dam1 / 2;

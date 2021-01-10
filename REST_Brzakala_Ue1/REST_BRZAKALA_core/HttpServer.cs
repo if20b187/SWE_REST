@@ -1096,7 +1096,7 @@ namespace REST_BRZAKALA_core
                 dbc.AddUserCard("testuser2", 18, "Troll", 13, "fire", "spell");
                 dbc.AddUserCard("testuser2", 19, "Troll", 18, "water", "spell");
                 dbc.AddUserCard("testuser2", 20, "Elves", 11, "water", "spell");
-
+                res.ResponseFailed();
                 stream.Write(res.sendBytes, 0, res.sendBytes.Length);
                 rs.RequestBody.Clear();
             }
