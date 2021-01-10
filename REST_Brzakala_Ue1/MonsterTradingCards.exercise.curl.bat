@@ -132,14 +132,9 @@ echo.
 echo.
 
 REM --------------------------------------------------
-echo 4.1) acquire packages testuser1
-curl -X POST http://localhost:8080/transactions/packages --header "Content-Type: application/json" --header "Authorization: Basic testuser1-mtcgToken" 
+echo 4.1) acquire cards testuser1 & testuser2 FOR TESTING
+curl -X POST http://localhost:8080/testinsert
 echo.
-curl -X POST http://localhost:8080/transactions/packages --header "Content-Type: application/json" --header "Authorization: Basic testuser1-mtcgToken" 
-echo.
-curl -X POST http://localhost:8080/transactions/packages --header "Content-Type: application/json" --header "Authorization: Basic testuser2-mtcgToken" 
-echo.
-curl -X POST http://localhost:8080/transactions/packages --header "Content-Type: application/json" --header "Authorization: Basic testuser2-mtcgToken" 
 
 REM --------------------------------------------------
 echo 5) acquire packages altenhof
@@ -153,7 +148,7 @@ echo.
 echo.
 
 REM --------------------------------------------------
-echo 6) add new packages
+echo 6) add new random packages
 curl -X POST http://localhost:8080/packages --header "Content-Type: application/json" --header "Authorization: Basic admin-mtcgToken" 
 echo.
 curl -X POST http://localhost:8080/packages --header "Content-Type: application/json" --header "Authorization: Basic admin-mtcgToken" 
@@ -206,23 +201,23 @@ echo.
 curl -X GET http://localhost:8080/deck --header "Authorization: Basic altenhof-mtcgToken"
 echo.
 echo.
-curl -X PUT http://localhost:8080/deck --header "Content-Type: application/json" --header "Authorization: Basic testuser1-mtcgToken" -d "[\"1\", \"11\", \"9\", \"19\"]"
+curl -X PUT http://localhost:8080/deck --header "Content-Type: application/json" --header "Authorization: Basic testuser1-mtcgToken" -d "[\"1\", \"2\", \"3\", \"4\"]"
 echo.
-curl -X PUT http://localhost:8080/deck --header "Content-Type: application/json" --header "Authorization: Basic testuser2-mtcgToken" -d "[\"6\", \"8\", \"10\", \"3\"]"
+curl -X PUT http://localhost:8080/deck --header "Content-Type: application/json" --header "Authorization: Basic testuser2-mtcgToken" -d "[\"11\", \"12\", \"13\", \"14\"]"
 echo.
 echo should fail and show original from before:
-curl -X PUT http://localhost:8080/deck --header "Content-Type: application/json" --header "Authorization: Basic altenhof-mtcgToken" -d "[\"1\", \"2\", \"3\", \"4\"]"
+curl -X PUT http://localhost:8080/deck --header "Content-Type: application/json" --header "Authorization: Basic testuser2-mtcgToken" -d "[\"1\", \"2\", \"3\", \"4\"]"
 echo.
-curl -X GET http://localhost:8080/deck --header "Authorization: Basic altenhof-mtcgToken"
+curl -X GET http://localhost:8080/deck --header "Authorization: Basic testuser2-mtcgToken"
 echo.
 echo.
 echo should fail ... only 3 cards set
 curl -X PUT http://localhost:8080/deck --header "Content-Type: application/json" --header "Authorization: Basic altenhof-mtcgToken" -d "[\"1\", \"2\", \"3\"]"
 echo should fail, bc card not in his posession.
-curl -X PUT http://localhost:8080/deck --header "Content-Type: application/json" --header "Authorization: Basic altenhof-mtcgToken" -d "[\"1\", \"2\", \"3\", \"4\"]"
+curl -X PUT http://localhost:8080/deck --header "Content-Type: application/json" --header "Authorization: Basic testuser2-mtcgToken" -d "[\"1\", \"2\", \"3\", \"4\"]"
 echo.
 echo should fail, bc he want to use 2 of the same cards.
-curl -X PUT http://localhost:8080/deck --header "Content-Type: application/json" --header "Authorization: Basic altenhof-mtcgToken" -d "[\"1\", \"2\", \"2\", \"4\"]"
+curl -X PUT http://localhost:8080/deck --header "Content-Type: application/json" --header "Authorization: Basic testuser1-mtcgToken" -d "[\"1\", \"2\", \"2\", \"4\"]"
 echo.
 
 REM --------------------------------------------------
@@ -231,6 +226,10 @@ curl -X GET http://localhost:8080/deck --header "Authorization: Basic kienboec-m
 echo.
 curl -X GET http://localhost:8080/deck --header "Authorization: Basic altenhof-mtcgToken"
 echo.
+curl -X GET http://localhost:8080/deck --header "Authorization: Basic testuser1-mtcgToken"
+echo.
+curl -X GET http://localhost:8080/deck --header "Authorization: Basic testuser2-mtcgToken"
+echo.
 echo.
 
 REM --------------------------------------------------
@@ -238,10 +237,14 @@ echo 13) show configured deck different representation
 echo kienboec
 curl -X GET http://localhost:8080/deck?format=plain --header "Authorization: Basic kienboec-mtcgToken"
 echo.
-echo.
 echo altenhof
 curl -X GET http://localhost:8080/deck?format=plain --header "Authorization: Basic altenhof-mtcgToken"
 echo.
+echo testuser1
+curl -X GET http://localhost:8080/deck?format=plain --header "Authorization: Basic testuser1-mtcgToken"
+echo.
+echo testuser2
+curl -X GET http://localhost:8080/deck?format=plain --header "Authorization: Basic testuser2-mtcgToken"
 echo.
 
 REM --------------------------------------------------
@@ -255,9 +258,17 @@ curl -X PUT http://localhost:8080/users/kienboec --header "Content-Type: applica
 echo.
 curl -X PUT http://localhost:8080/users/altenhof --header "Content-Type: application/json" --header "Authorization: Basic altenhof-mtcgToken" -d "{\"Name\": \"Altenhofer\", \"Bio\": \"me codin...\",  \"Image\": \":-D\"}"
 echo.
+curl -X PUT http://localhost:8080/users/kienboec --header "Content-Type: application/json" --header "Authorization: Basic testuser1-mtcgToken" -d "{\"Name\": \"TestUser1\",  \"Bio\": \"me testing...\", \"Image\": \":-(\"}"
+echo.
+curl -X PUT http://localhost:8080/users/altenhof --header "Content-Type: application/json" --header "Authorization: Basic testuser2-mtcgToken" -d "{\"Name\": \"TestUser2\", \"Bio\": \"me testing to...\",  \"Image\": \":-*\"}"
+echo.
 curl -X GET http://localhost:8080/users/kienboec --header "Authorization: Basic kienboec-mtcgToken"
 echo.
 curl -X GET http://localhost:8080/users/altenhof --header "Authorization: Basic altenhof-mtcgToken"
+echo.
+curl -X GET http://localhost:8080/users/kienboec --header "Authorization: Basic testuser1-mtcgToken"
+echo.
+curl -X GET http://localhost:8080/users/altenhof --header "Authorization: Basic testuser2-mtcgToken"
 echo.
 echo.
 echo should fail:
@@ -279,6 +290,10 @@ curl -X GET http://localhost:8080/stats --header "Authorization: Basic kienboec-
 echo.
 curl -X GET http://localhost:8080/stats --header "Authorization: Basic altenhof-mtcgToken"
 echo.
+curl -X GET http://localhost:8080/stats --header "Authorization: Basic testuser1-mtcgToken"
+echo.
+curl -X GET http://localhost:8080/stats --header "Authorization: Basic testuser2-mtcgToken"
+echo.
 echo.
 
 REM --------------------------------------------------
@@ -290,10 +305,6 @@ echo.
 REM --------------------------------------------------
 echo 17) battle
 echo.
-curl -X POST http://localhost:8080/battle --header "Authorization: Basic kienboec-mtcgToken" 
-echo.
-curl -X POST http://localhost:8080/battle --header "Authorization: Basic altenhof-mtcgToken" 
-echo.
 curl -X POST http://localhost:8080/battle --header "Authorization: Basic testuser1-mtcgToken"
 echo.
 curl -X POST http://localhost:8080/battle --header "Authorization: Basic testuser2-mtcgToken"
@@ -304,6 +315,7 @@ echo.
 curl -X GET http://localhost:8080/battle/1 --header "Authorization: Basic kienboec-mtcgToken" 
 echo.   
 curl -X GET http://localhost:8080/battle/1 --header "Authorization: Basic altenhof-mtcgToken" 
+echo should fail: matchid dont exists
 echo.   
 curl -X GET http://localhost:8080/battle/2 --header "Authorization: Basic testuser1-mtcgToken"
 echo.   
@@ -311,11 +323,11 @@ curl -X GET http://localhost:8080/battle/2 --header "Authorization: Basic testus
 
 REM --------------------------------------------------
 echo 18) Stats 
-echo kienboec
-curl -X GET http://localhost:8080/stats --header "Authorization: Basic kienboec-mtcgToken"
+echo testuser1
+curl -X GET http://localhost:8080/stats --header "Authorization: Basic testuser1-mtcgToken"
 echo.
-echo altenhof
-curl -X GET http://localhost:8080/stats --header "Authorization: Basic altenhof-mtcgToken"
+echo testuser2
+curl -X GET http://localhost:8080/stats --header "Authorization: Basic testuser1-mtcgToken"
 echo.
 echo.
 

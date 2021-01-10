@@ -513,6 +513,41 @@ namespace REST_BRZAKALA_core
             return cont;
 
         }
+        public Boolean CheckMatchidExists(int iddb, int idcontains)
+        {
+            using var con = new NpgsqlConnection(cs);
+            con.Open();
+
+            using var cmd = new NpgsqlCommand("SELECT matchid FROM battlehistory where matchid=@id", con);
+            cmd.Parameters.AddWithValue("id", iddb);
+            using NpgsqlDataReader rdr = cmd.ExecuteReader();
+
+            Boolean cont = false;
+            string idCard = "";
+            while (rdr.Read())
+            {
+                idCard = rdr.GetInt32(0).ToString();
+            }
+
+            try
+            {
+                if (String.Compare(idCard, idcontains.ToString()) == 0)
+                {
+                    cont = true;
+                }
+                else
+                {
+                    cont = false;
+                }
+            }
+            catch (Exception e)
+            {
+                Console.WriteLine("Matchid existiert nicht.");
+            }
+
+            return cont;
+
+        }
         public int CardMaxId()
         {
             using var con = new NpgsqlConnection(cs);

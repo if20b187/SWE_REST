@@ -1,0 +1,114 @@
+create table if not exists users
+(
+	username varchar(450),
+	password varchar(30),
+	coins integer
+);
+
+alter table users owner to postgres;
+
+create table if not exists loggedin
+(
+	userlogedin varchar(450),
+	token varchar(450)
+);
+
+alter table loggedin owner to postgres;
+
+create table if not exists card
+(
+	id integer,
+	name varchar(450),
+	damage integer,
+	element varchar(450),
+	type varchar(450)
+);
+
+alter table card owner to postgres;
+
+create unique index if not exists card_id_uindex
+	on card (id);
+
+create table if not exists packages
+(
+	packid integer,
+	card1 integer,
+	card2 integer,
+	card3 integer,
+	card4 integer,
+	card5 integer
+);
+
+alter table packages owner to postgres;
+
+create table if not exists usercards
+(
+	username varchar(450),
+	id integer,
+	name varchar(450),
+	damage integer,
+	element varchar(450),
+	type varchar(450)
+);
+
+alter table usercards owner to postgres;
+
+create table if not exists deck
+(
+	username varchar(450),
+	card1 varchar(450),
+	card2 varchar(450),
+	card3 varchar(450),
+	card4 varchar(450)
+);
+
+alter table deck owner to postgres;
+
+create table if not exists userdata
+(
+	username varchar(450),
+	name varchar(450),
+	bio varchar(450),
+	image varchar(450)
+);
+
+alter table userdata owner to postgres;
+
+create table if not exists userstats
+(
+	username varchar(450),
+	wins integer,
+	draws integer,
+	loses integer
+);
+
+alter table userstats owner to postgres;
+
+create table if not exists tradings
+(
+	tradingid integer,
+	card varchar(450),
+	mindamage integer,
+	type varchar(450),
+	username varchar(450)
+);
+
+alter table tradings owner to postgres;
+
+create table if not exists battlehistory
+(
+	matchid integer,
+	winner varchar(450),
+	protokol varchar(2000)
+);
+
+alter table battlehistory owner to postgres;
+
+create table if not exists elo
+(
+	username varchar(450),
+	elo integer
+);
+
+alter table elo owner to postgres;
+
