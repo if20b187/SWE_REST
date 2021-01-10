@@ -569,6 +569,21 @@ namespace REST_BRZAKALA_core
 			responseMsg = builder.ToString();
 			sendBytes = enc.GetBytes(builder.ToString());
 		}
+		public void ResponseBattleFailDeck()
+		{
+			StringBuilder builder = new StringBuilder();
+			builder.AppendFormat("HTTP/1.1 404 Not Found\n");
+			builder.AppendLine("Content-Type: application/json");
+			builder.AppendLine("");
+			builder.AppendLine("Please Update your Deck, One or more Cards are not in your possesion anymore.");
+			builder.AppendLine("");
+
+			Console.WriteLine("");
+			Console.WriteLine("responce:");
+			Console.WriteLine(builder.ToString());
+			responseMsg = builder.ToString();
+			sendBytes = enc.GetBytes(builder.ToString());
+		}
 		public void ResponseGetUserStats(string json)
 		{
 			StringBuilder builder = new StringBuilder();

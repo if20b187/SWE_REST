@@ -866,28 +866,82 @@ namespace REST_BRZAKALA_core
              * Einfach überprüfen ob die Ids der im deck hat noch in seinen Usercards verfügbar sind.
              * Wenn nicht -> RESPONSE "Bitte Deck aktualisieren - Deck ist nicht Up2date".
              */
-            else if (String.Compare(rs.Method, "GET") == 0 && String.Compare(rs.Url, "/battle") == 0)
+            else if (String.Compare(rs.Method, "POST") == 0 && String.Compare(rs.Url, "/battle") == 0 && rs.RequestBody.ContainsKey("Authorization"))
             {
+                string username = dbc.TokenToUser(rs.RequestBody["Authorization"]);
+                string deckid1 = dbc.GetUserDeck(username).Split('\n')[0];
+                string deckid2 = dbc.GetUserDeck(username).Split('\n')[1];
+                string deckid3 = dbc.GetUserDeck(username).Split('\n')[2];
+                string deckid4 = dbc.GetUserDeck(username).Split('\n')[3];
+                int cardiddeck1 = Int32.Parse(deckid1.Split(',')[0]);
+                int cardiddeck2 = Int32.Parse(deckid2.Split(',')[0]);
+                int cardiddeck3 = Int32.Parse(deckid3.Split(',')[0]);
+                int cardiddeck4 = Int32.Parse(deckid4.Split(',')[0]);
+                Console.WriteLine("deck: {0},{1},{2},{3}",cardiddeck1,cardiddeck2,cardiddeck3,cardiddeck4);
+
+                // Fighter definieren:
+
+                if (String.Compare(rs.RequestBody["Authorization"], dbc.CheckToken(rs.RequestBody["Authorization"])) == 0 && dbc.CheckUserHasCard(username, cardiddeck1, cardiddeck1) && dbc.CheckUserHasCard(username, cardiddeck2, cardiddeck2) && dbc.CheckUserHasCard(username, cardiddeck3, cardiddeck3) && dbc.CheckUserHasCard(username, cardiddeck4, cardiddeck4))
+                {
+                    if(battle.Fighter1.Count < 4)
+                    {
+                        Console.WriteLine("Füge Figther1 Cards hinzu");
+                        battle.Fighter1name = username;
+                        battle.FillDeckFigther(battle.Fighter1name, battle.Fighter1);
+                        // Der bekommt eine Response: ihr Match startet gleich: matchid ist x .. Nachschauen in /battle/<matchid>
+                        res.ResponseBattle();
+                    }
+                    else
+                    {
+                        Console.WriteLine("Füge Figther2 Cards hinzu");
+                        battle.Fighter2name = username;
+                        battle.FillDeckFigther(battle.Fighter2name, battle.Fighter2);
+                    }
+                    foreach (Object obj in battle.Fighter1)
+                        Console.WriteLine("   cards:{0}", obj);
+                    Console.WriteLine("-----------------------------");
+                    foreach (Object obj in battle.Fighter2)
+                        Console.WriteLine("   cards:{0}", obj);
+                    Console.WriteLine("-----------------------------");
+                    // NOW IF THE DECKS ARE FULL - LETS FIGHT!
+                    if (battle.Fighter1.Count == 4 && battle.Fighter2.Count == 4)
+                    {
+                        for (int i = 0; i < 4; i++)
+                        {
+                            //SetWinner(string username1, string username2, string name1, string typ1, string ele1, int dam1, string name2, string typ2, string ele2, int dam2)
+                            string x = battle.SetWinner(battle.Fighter1name, battle.Fighter2name, battle.Fighter1[i].name, battle.Fighter1[i].type, battle.Fighter1[i].element, battle.Fighter1[i].damage, battle.Fighter2[i].name, battle.Fighter2[i].type, battle.Fighter2[i].element, battle.Fighter2[i].damage);
+                            Console.WriteLine(x);
+                        }
+
+                        // Nach dem Kampf wieder Alles Initialisieren für die nächsten Kämpfe:
+                        battle.Fighter1.Clear();
+                        battle.Fighter2.Clear();
+                        battle.Fighter1name = "";
+                        battle.Fighter2name = "";
+                        res.ResponseBattle();
+                    }
+                }
+                else
+                {
+                    //Console.WriteLine("Please Update your Deck, One or more Cards are not in your possesion anymore.");
+                    res.ResponseBattleFailDeck();
+                }
+                /*
                 string fighters = rs.ContentStr;
                 string f1 = fighters.Split(",")[0];
                 string f2 = fighters.Split(",")[1];
                 res.ResponseBattle();
-                battle.FillDeckFigther(f1, battle.Fighter1);
-                battle.FillDeckFigther(f2, battle.Fighter2);
-                for(int i=0; i < 4; i++)
+                battle.FillDeckFigther(battle.Fighter1name, battle.Fighter1);
+                battle.FillDeckFigther(battle.Fighter2name, battle.Fighter2);
+                for (int i = 0; i < 4; i++)
                 {
                     //SetWinner(string username1, string username2, string name1, string typ1, string ele1, int dam1, string name2, string typ2, string ele2, int dam2)
-                    string x = battle.SetWinner(f1, f2, battle.Fighter1[i].name, battle.Fighter1[i].type, battle.Fighter1[i].element, battle.Fighter1[i].damage, battle.Fighter2[i].name, battle.Fighter2[i].type, battle.Fighter2[i].element, battle.Fighter2[i].damage);
+                    string x = battle.SetWinner(battle.Fighter1name, battle.Fighter2name, battle.Fighter1[i].name, battle.Fighter1[i].type, battle.Fighter1[i].element, battle.Fighter1[i].damage, battle.Fighter2[i].name, battle.Fighter2[i].type, battle.Fighter2[i].element, battle.Fighter2[i].damage);
                     Console.WriteLine(x);
                 }
-                
-                /*
-                Console.WriteLine("-----------------------------");
-                Console.WriteLine("First Value from List item 1");
-                Console.WriteLine(battle.Fighter1[0].id);
-                Console.WriteLine("-----------------------------");
-                */
 
+                
+                */
                 stream.Write(res.sendBytes, 0, res.sendBytes.Length);
                 rs.RequestBody.Clear();
             }

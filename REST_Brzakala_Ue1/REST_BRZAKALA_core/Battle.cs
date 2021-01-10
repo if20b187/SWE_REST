@@ -25,8 +25,6 @@ namespace REST_BRZAKALA_core
             int winFight2 = 0;
         }
 
-        
-
         //returns Winner
         public string SetWinner(string username1, string username2, string name1, string typ1,string ele1, int dam1, string name2, string typ2, string ele2, int dam2)
         {
@@ -427,5 +425,7 @@ namespace REST_BRZAKALA_core
         }
         public List<Card> Fighter1 { get; set; }
         public List<Card> Fighter2 { get; set; }
+        public string Fighter1name { get; set; }
+        public string Fighter2name { get; set; }
     }
 }

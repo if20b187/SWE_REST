@@ -59,7 +59,7 @@ curl -X POST http://localhost:8080/card --header "Content-Type: application/json
 echo.
 curl -X POST http://localhost:8080/card --header "Content-Type: application/json" --header "Authorization: Basic admin-mtcgToken" -d "{\"id\": 9, \"name\": \"Troll\", \"damage\": 38, \"element\": \"fire\", \"type\": \"monster\"}"
 echo.
-curl -X POST http://localhost:8080/card --header "Content-Type: application/json" --header "Authorization: Basic admin-mtcgToken" -d "{\"id\": 10, \"name\": \"WaterGoblin\", \"damage\": 33, \"element\": \"water\", \"type\": \"spell\"}"
+curl -X POST http://localhost:8080/card --header "Content-Type: application/json" --header "Authorization: Basic admin-mtcgToken" -d "{\"id\": 10, \"name\": \"Goblin\", \"damage\": 33, \"element\": \"water\", \"type\": \"spell\"}"
 echo.
 curl -X POST http://localhost:8080/card --header "Content-Type: application/json" --header "Authorization: Basic admin-mtcgToken" -d "{\"id\": 11, \"name\": \"Dragon\", \"damage\": 46, \"element\": \"fire\", \"type\": \"monster\"}"
 echo.
@@ -179,7 +179,7 @@ echo.
 
 REM --------------------------------------------------
 echo 11) configure deck
-curl -X PUT http://localhost:8080/deck --header "Content-Type: application/json" --header "Authorization: Basic kienboec-mtcgToken" -d "[\"18\", \4\", \"11\", \"10\"]"
+curl -X PUT http://localhost:8080/deck --header "Content-Type: application/json" --header "Authorization: Basic kienboec-mtcgToken" -d "[\"18\", \"4\", \"11\", \"10\"]"
 echo.
 curl -X GET http://localhost:8080/deck --header "Authorization: Basic kienboec-mtcgToken"
 echo.
